@@ -352,7 +352,7 @@ summary:focus-visible,.pl-listrow:focus-visible,.pl-form:focus-visible{outline:3
 .pl-region .pl-note{margin:0}
 
 /* Home op een groot scherm (Proximity, Common Region): links begroeting, Vandaag en Mijn tuin; rechts de vakken in twee kolommen */
-.pl-home{display:grid;gap:14px;grid-template-areas:"hero" "today" "list" "tuin"}
+.pl-home{display:grid;gap:14px;grid-template-areas:"hero" "today" "tuin" "list"}
 .pl-home > .pl-hero{grid-area:hero}.pl-area-today{grid-area:today}.pl-area-list{grid-area:list}.pl-area-tuin{grid-area:tuin}
 @media (min-width:1024px){
   .pl-app.pl-homeapp{max-width:1200px;padding-inline:32px}
@@ -493,6 +493,82 @@ summary:focus-visible,.pl-listrow:focus-visible,.pl-form:focus-visible{outline:3
 .pl-demotools{display:inline-flex;gap:4px;margin-left:10px}
 .pl-demotools button{border:0;background:none;color:var(--pl-ink-soft);font:inherit;font-size:.75rem;text-decoration:underline;text-underline-offset:2px;cursor:pointer;min-height:32px;padding:4px 6px}
 .pl-demotools button.pl-demo-armed{color:var(--pl-violet-deep);font-weight:600}
+/* v0.13.1: alleen voor schermlezers */
+.pl-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+/* v0.16 Laws of UX */
+.pl-atstart .pl-top-tr .pl-title{display:none}                       /* het startscherm heeft de naam als kop in de kaart */
+.pl-feel-ronde{position:relative;justify-content:center;margin-top:2px}  /* Te makkelijk / Pittig onder de opgave, weg van Home (Fitts) */
+.pl-feel-ronde .pl-feelpanel{top:auto;bottom:calc(100% + 6px);right:auto;left:50%;transform:translateX(-50%)}
+.pl-feel-ronde .pl-feelbtn{border-color:transparent;background:transparent;text-decoration:underline;text-underline-offset:3px}
+.pl-more{border-top:1px solid var(--pl-line);padding-top:4px}
+.pl-more > :not(summary){margin-top:8px}
+.pl-status.s-klaar{color:var(--pl-violet-deep);font-weight:500}
+/* v0.17 snel door: wat net lukte, rustig boven de volgende vraag; het werkvlak flitst kort groen */
+.pl-prev{background:var(--pl-leaf-soft);border-left:4px solid var(--pl-leaf);border-radius:10px;padding:6px 12px;font-size:.92rem;line-height:1.4;color:var(--pl-ink)}
+.pl-prev b{color:#1F6B45;font-family:var(--pl-display);font-weight:600;margin-right:6px}
+.pl-prev-stem{color:var(--pl-ink-soft)}
+.pl-prev[hidden]{display:none}
+@keyframes pl-okflash{0%{box-shadow:0 0 0 0 rgba(47,133,90,0)}30%{box-shadow:0 0 0 4px var(--pl-leaf)}100%{box-shadow:0 0 0 0 rgba(47,133,90,0)}}
+.pl-okflash > *:first-child{animation:pl-okflash .55s ease-out;border-radius:var(--pl-r-card)}
+@media (prefers-reduced-motion:reduce){.pl-okflash > *:first-child{animation:none}}
+
+/* v0.21 Mijn tuin beeldvullend: de weide achter alles; de bovenbalk, de zin van de rups en het paneel zweven erover */
+.pl-tuinvol{position:fixed;inset:0;z-index:0}
+.pl-app:has(.pl-tuinvol) .pl-top{position:relative;z-index:3;align-self:flex-start;max-width:100%;background:color-mix(in srgb,var(--pl-paper) 88%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-radius:999px;padding:6px 18px 6px 6px;box-shadow:0 8px 22px -12px rgba(40,25,35,.5)}
+.pl-app:has(.pl-tuinvol) .pl-foot{display:none}
+.pl-app:has(.pl-tuinvol) .pl-screen{flex:1}
+.pl-tuinwolk{position:relative;z-index:3;align-self:flex-start;max-width:min(520px,100%);background:color-mix(in srgb,var(--pl-paper) 90%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-radius:18px;padding:10px 16px;box-shadow:0 8px 22px -12px rgba(40,25,35,.5)}
+.pl-tuinpaneel{position:fixed;z-index:4;left:50%;transform:translateX(-50%);bottom:max(14px,env(safe-area-inset-bottom));width:min(560px,calc(100% - 32px));max-height:min(64dvh,640px);overflow:auto;padding:10px;display:grid;gap:8px;box-shadow:0 12px 30px -14px rgba(40,25,35,.55)}
+.pl-paneelknop{display:flex;align-items:center;justify-content:center;gap:10px}
+.pl-paneelknop .pl-chev{transform:rotate(-135deg);transition:transform .2s;margin:4px 0 0}
+.pl-paneelknop[aria-expanded="true"] .pl-chev{transform:rotate(45deg);margin:0 0 4px}
+.pl-paneelin[hidden]{display:none}
+
+/* v0.21 Liquid Glass: menu's op de tuin zijn van matglas — de tuin schemert wazig door, met een lichte rand en een glans bovenaan.
+   Wit genoeg om goed te lezen. Alleen op het openingsscherm en de tuinpagina; de oefeningen zelf blijven wit. */
+:root{--glas:linear-gradient(150deg,rgba(255,255,255,.80),rgba(255,255,255,.60));--glas-licht:linear-gradient(150deg,rgba(255,255,255,.62),rgba(255,255,255,.40));--glas-rand:rgba(255,255,255,.75);
+  --glas-schaduw:inset 0 1px 0 rgba(255,255,255,.95),inset 0 -1px 0 rgba(255,255,255,.3),0 14px 34px -16px rgba(20,30,60,.5)}
+.pl-app:has(.pl-achter) .pl-top,
+.pl-app:has(.pl-achter) .pl-hero,
+.pl-app:has(.pl-achter) .pl-card,
+.pl-app:has(.pl-achter) .pl-group,
+.pl-app:has(.pl-achter) .pl-makelink,
+.k-s-home .k-top,
+.k-s-home .k-hero,
+.k-s-home .k-line,
+.k-s-home .k-tuinbtn,
+.pl-tuinwolk,
+.pl-tuinpaneel,
+.pl-app:has(.pl-tuinvol) .pl-top{background:var(--glas)!important;-webkit-backdrop-filter:blur(22px) saturate(180%);backdrop-filter:blur(22px) saturate(180%);border:1px solid var(--glas-rand)!important;box-shadow:var(--glas-schaduw)!important;position:relative;isolation:isolate}
+.pl-app:has(.pl-achter) .pl-top::before,
+.pl-app:has(.pl-achter) .pl-hero::before,
+.pl-app:has(.pl-achter) .pl-card::before,
+.pl-app:has(.pl-achter) .pl-group::before,
+.pl-app:has(.pl-achter) .pl-makelink::before,
+.k-s-home .k-top::before,
+.k-s-home .k-hero::before,
+.k-s-home .k-line::before,
+.k-s-home .k-tuinbtn::before,
+.pl-tuinwolk::before,
+.pl-tuinpaneel::before,
+.pl-app:has(.pl-tuinvol) .pl-top::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:-1;background:linear-gradient(180deg,rgba(255,255,255,.7) 0,rgba(255,255,255,0) 34%),radial-gradient(120% 60% at 15% 0,rgba(255,255,255,.45),transparent 60%);mix-blend-mode:soft-light}
+/* rijen en tegels binnen een glazen vlak: lichter glas */
+.pl-app:has(.pl-achter) .pl-group .pl-listrow,.k-s-home .k-tile,.pl-tuinpaneel .pl-perk{background:var(--glas-licht)!important;border:1px solid rgba(255,255,255,.7)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.9)!important;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.pl-app:has(.pl-achter) .pl-group{padding:12px;border-radius:22px}
+.pl-app:has(.pl-achter) .pl-top{align-self:flex-start;border-radius:999px;padding:6px 18px 6px 6px}
+.pl-app:has(.pl-achter) .pl-foot,.k-s-home .k-foot{position:relative;z-index:1;color:rgba(255,255,255,.9);text-shadow:0 1px 3px rgba(0,0,0,.45)}
+/* de tuin achter het openingsscherm */
+.pl-achter{position:fixed;inset:0;z-index:0}
+.pl-app:has(.pl-achter) > :not(.pl-achter){position:relative;z-index:1}
+.k-s-home .k-achter{position:fixed;inset:0;z-index:0}
+.k-s-home > :not(.k-achter){position:relative;z-index:1}
+.k-s-home .k-top{border-radius:999px;padding:6px 8px 6px 14px}
+.k-s-home .k-line{border-radius:26px;padding:12px}
+.k-s-home .k-tuinbtn{min-height:0;border-radius:999px;align-self:center;width:auto;padding:0}
+.k-s-home .k-tuinlabel{position:static;background:none;padding:14px 26px 14px 18px;font-size:1.25rem}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  :root{--glas:rgba(255,255,255,.93);--glas-licht:rgba(255,255,255,.88)}
+}
 
 /* De tuin v1.0: één weide (scherp beeld), losse lagen die groeien, beweging uit tuin-beweging.js, licht volgens de klok.
    Alles binnen .gd. Bij "minder beweging" staat alles stil (core.css + tuin-beweging.js). Geen tekst. */
@@ -504,6 +580,10 @@ summary:focus-visible,.pl-listrow:focus-visible,.pl-form:focus-visible{outline:3
 .gd .bg,.gd .bgw{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .gd.gd-strook{aspect-ratio:16/5;border-radius:18px;box-shadow:none}
 @media (max-width:600px){.gd.gd-strook{aspect-ratio:16/7}}
+/* beeldvullend (de tuinpagina): de weide bedekt het hele vak, onderaan vast; op een smal scherm schuif je opzij */
+.gd.gd-vol{position:absolute;inset:0;width:100%;height:100%;aspect-ratio:auto;border-radius:0;box-shadow:none;container-type:size;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
+.gd.gd-vol::-webkit-scrollbar{display:none}
+.gd-vol .gd-scene{left:0;bottom:0;width:max(100cqw,calc(100cqh * 16 / 9))}
 /* nevel boven in de verte: verdwijnt langzaam met meer trainingsdagen */
 .gd-nevel{position:absolute;left:0;right:0;top:0;height:55%;background:linear-gradient(180deg,rgba(250,248,240,.8),rgba(250,248,240,0));opacity:calc(var(--nevel) * .7);pointer-events:none;z-index:1}
 
@@ -578,6 +658,9 @@ summary:focus-visible,.pl-listrow:focus-visible,.pl-form:focus-visible{outline:3
 .rk-cell.v{background:var(--pl-violet);border-color:var(--pl-violet)}
 .rk-cell.l{background:var(--pl-lilac);border-color:var(--pl-lilac)}
 .rk-cell.x{background:transparent;border:2px solid var(--pl-lilac)}
+
+/* v0.6.1: goed = het antwoord kleurt groen (de vorm van "Gelukt"), daarna meteen de volgende som */
+.rk-slot.rk-goed{color:#1F6B45;border-bottom-color:var(--pl-leaf);background:var(--pl-leaf-soft);border-radius:8px 8px 0 0;transition:background .15s}
 
 /* Tafelreis v0.6: het lichtpad. Een pad van stapstenen loopt door het bos naar een open plek met warm zonlicht.
    Licht van boven en in het midden; donkerder aan de randen (daar staan de bomen). Drie lagen diepte: verre bomen, het pad,
@@ -797,7 +880,9 @@ summary:focus-visible,.pl-listrow:focus-visible,.pl-form:focus-visible{outline:3
 .tf-play{padding-bottom:16px}
 @media (max-width:560px){.tf-play{padding-bottom:14px}.tf-world,.tf-world .tf-play{min-height:min(70vh,560px)}}
 /* v0.13: de rij met Te makkelijk / Pittig staat boven het spel; het bos wordt op de telefoon iets lager (geen scrollen op 375×667) */
-@media (max-width:560px){.tf-world,.tf-world .tf-play{min-height:min(66vh,540px)}}
+@media (max-width:560px){.tf-world,.tf-world .tf-play{min-height:min(61vh,520px)}}
+/* v0.16: Te makkelijk / Pittig staat onder het bos; op een kleine telefoon iets dichter op elkaar (geen scrollen op 375×667) */
+@media (max-width:560px) and (max-height:760px){.tf-play{gap:6px;padding-top:10px;padding-bottom:6px}}
 
 .sp-board{display:grid;gap:14px}
 .sp-frame{font-family:var(--pl-display);font-weight:600;font-size:clamp(1.8rem,6vw,2.6rem);margin:0;line-height:1.15}
@@ -810,7 +895,8 @@ summary:focus-visible,.pl-listrow:focus-visible,.pl-form:focus-visible{outline:3
 .sp-grepen{display:flex;align-items:center;gap:10px;font-family:var(--pl-display);font-weight:600;font-size:2rem}
 .sp-grepen span:not(.sp-bar){background:var(--pl-violet-soft);border-radius:12px;padding:4px 14px}
 .sp-bar{width:3px;height:1.4em;background:var(--pl-honey);border-radius:2px}
-.sp-head{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.sp-head{display:flex;align-items:center;gap:8px 12px;flex-wrap:wrap}
+.sp-saybtn{min-height:44px;padding:8px 18px;font-size:1rem}
 
 
 
@@ -857,9 +943,9 @@ summary:focus-visible,.pl-listrow:focus-visible,.pl-form:focus-visible{outline:3
 </style>
 </head>
 <body>
-<!-- Leeratelier Leeratelier v0.20.0. Gebouwd op de Leeratelier-kern v0.20.0. Lettertypen Fredoka en Lexend (SIL Open Font License) zitten in de pagina; er gaat geen verzoek naar buiten. Opslag: window.storage (Claude-chat), anders db (gepubliceerd), anders browser. -->
+<!-- Leeratelier Leeratelier v0.21.0. Gebouwd op de Leeratelier-kern v0.21.0. Lettertypen Fredoka en Lexend (SIL Open Font License) zitten in de pagina; er gaat geen verzoek naar buiten. Opslag: window.storage (Claude-chat), anders db (gepubliceerd), anders browser. -->
 <main class="pl-app" id="pl-app"></main>
-<script>window.__plSpace={"shell":"","id":"presentatie","learnerName":"Isabel","requireLogin":true,"demoTools":true,"migrateLegacy":false,"version":"v0.20.0","theme":"roze","loginUser":"demo","loginHash":"705599c2408949d07e1713ef0b0535344aa0ba5f45711c7d2ccabd25a0ed1393"};window.__plAudio={};window.__plImages={};</script><script>window.__plDemoFixture={
+<script>window.__plSpace={"shell":"","id":"presentatie","learnerName":"Isabel","requireLogin":true,"demoTools":true,"migrateLegacy":false,"version":"v0.21.0","theme":"roze","loginUser":"demo","loginHash":"705599c2408949d07e1713ef0b0535344aa0ba5f45711c7d2ccabd25a0ed1393"};window.__plAudio={"woord-aap":"audio/woord-aap.m4a","woord-appel":"audio/woord-appel.m4a","woord-baan":"audio/woord-baan.m4a","woord-baas":"audio/woord-baas.m4a","woord-bad":"audio/woord-bad.m4a","woord-bak":"audio/woord-bak.m4a","woord-bal":"audio/woord-bal.m4a","woord-bed":"audio/woord-bed.m4a","woord-beek":"audio/woord-beek.m4a","woord-been":"audio/woord-been.m4a","woord-beer":"audio/woord-beer.m4a","woord-beet":"audio/woord-beet.m4a","woord-bek":"audio/woord-bek.m4a","woord-bel":"audio/woord-bel.m4a","woord-berg":"audio/woord-berg.m4a","woord-bes":"audio/woord-bes.m4a","woord-beuk":"audio/woord-beuk.m4a","woord-bier":"audio/woord-bier.m4a","woord-bil":"audio/woord-bil.m4a","woord-blad":"audio/woord-blad.m4a","woord-bloem":"audio/woord-bloem.m4a","woord-blok":"audio/woord-blok.m4a","woord-boek":"audio/woord-boek.m4a","woord-boer":"audio/woord-boer.m4a","woord-bok":"audio/woord-bok.m4a","woord-bol":"audio/woord-bol.m4a","woord-bom":"audio/woord-bom.m4a","woord-bon":"audio/woord-bon.m4a","woord-boog":"audio/woord-boog.m4a","woord-boom":"audio/woord-boom.m4a","woord-boon":"audio/woord-boon.m4a","woord-boor":"audio/woord-boor.m4a","woord-boot":"audio/woord-boot.m4a","woord-bos":"audio/woord-bos.m4a","woord-bot":"audio/woord-bot.m4a","woord-brief":"audio/woord-brief.m4a","woord-bril":"audio/woord-bril.m4a","woord-broek":"audio/woord-broek.m4a","woord-brug":"audio/woord-brug.m4a","woord-bul":"audio/woord-bul.m4a","woord-bus":"audio/woord-bus.m4a","woord-buur":"audio/woord-buur.m4a","woord-daad":"audio/woord-daad.m4a","woord-dag":"audio/woord-dag.m4a","woord-dak":"audio/woord-dak.m4a","woord-dal":"audio/woord-dal.m4a","woord-dam":"audio/woord-dam.m4a","woord-das":"audio/woord-das.m4a","woord-deel":"audio/woord-deel.m4a","woord-deur":"audio/woord-deur.m4a","woord-dief":"audio/woord-dief.m4a","woord-dier":"audio/woord-dier.m4a","woord-doek":"audio/woord-doek.m4a","woord-doos":"audio/woord-doos.m4a","woord-dop":"audio/woord-dop.m4a","woord-draad":"audio/woord-draad.m4a","woord-droom":"audio/woord-droom.m4a","woord-duif":"audio/woord-duif.m4a","woord-duim":"audio/woord-duim.m4a","woord-duin":"audio/woord-duin.m4a","woord-egel":"audio/woord-egel.m4a","woord-fles":"audio/woord-fles.m4a","woord-gat":"audio/woord-gat.m4a","woord-gebed":"audio/woord-gebed.m4a","woord-geit":"audio/woord-geit.m4a","woord-gil":"audio/woord-gil.m4a","woord-glas":"audio/woord-glas.m4a","woord-god":"audio/woord-god.m4a","woord-graaf":"audio/woord-graaf.m4a","woord-graat":"audio/woord-graat.m4a","woord-graf":"audio/woord-graf.m4a","woord-haag":"audio/woord-haag.m4a","woord-haak":"audio/woord-haak.m4a","woord-haan":"audio/woord-haan.m4a","woord-haas":"audio/woord-haas.m4a","woord-hak":"audio/woord-hak.m4a","woord-hap":"audio/woord-hap.m4a","woord-heer":"audio/woord-heer.m4a","woord-hek":"audio/woord-hek.m4a","woord-hoed":"audio/woord-hoed.m4a","woord-hoes":"audio/woord-hoes.m4a","woord-hof":"audio/woord-hof.m4a","woord-hol":"audio/woord-hol.m4a","woord-huis":"audio/woord-huis.m4a","woord-hut":"audio/woord-hut.m4a","woord-jaar":"audio/woord-jaar.m4a","woord-jas":"audio/woord-jas.m4a","woord-kaak":"audio/woord-kaak.m4a","woord-kaas":"audio/woord-kaas.m4a","woord-kalf":"audio/woord-kalf.m4a","woord-kam":"audio/woord-kam.m4a","woord-kan":"audio/woord-kan.m4a","woord-kap":"audio/woord-kap.m4a","woord-kar":"audio/woord-kar.m4a","woord-kat":"audio/woord-kat.m4a","woord-kin":"audio/woord-kin.m4a","woord-kip":"audio/woord-kip.m4a","woord-klap":"audio/woord-klap.m4a","woord-kleed":"audio/woord-kleed.m4a","woord-klok":"audio/woord-klok.m4a","woord-knol":"audio/woord-knol.m4a","woord-knop":"audio/woord-knop.m4a","woord-koek":"audio/woord-koek.m4a","woord-kok":"audio/woord-kok.m4a","woord-kom":"audio/woord-kom.m4a","woord-kool":"audio/woord-kool.m4a","woord-koor":"audio/woord-koor.m4a","woord-kop":"audio/woord-kop.m4a","woord-kous":"audio/woord-kous.m4a","woord-kraag":"audio/woord-kraag.m4a","woord-kraai":"audio/woord-kraai.m4a","woord-kraal":"audio/woord-kraal.m4a","woord-kraam":"audio/woord-kraam.m4a","woord-kraan":"audio/woord-kraan.m4a","woord-kreeft":"audio/woord-kreeft.m4a","woord-kroon":"audio/woord-kroon.m4a","woord-kruik":"audio/woord-kruik.m4a","woord-kruk":"audio/woord-kruk.m4a","woord-kuip":"audio/woord-kuip.m4a","woord-kus":"audio/woord-kus.m4a","woord-laan":"audio/woord-laan.m4a","woord-lak":"audio/woord-lak.m4a","woord-lap":"audio/woord-lap.m4a","woord-lat":"audio/woord-lat.m4a","woord-les":"audio/woord-les.m4a","woord-lid":"audio/woord-lid.m4a","woord-lied":"audio/woord-lied.m4a","woord-lijf":"audio/woord-lijf.m4a","woord-lip":"audio/woord-lip.m4a","woord-loon":"audio/woord-loon.m4a","woord-lot":"audio/woord-lot.m4a","woord-lus":"audio/woord-lus.m4a","woord-maan":"audio/woord-maan.m4a","woord-maat":"audio/woord-maat.m4a","woord-man":"audio/woord-man.m4a","woord-map":"audio/woord-map.m4a","woord-mat":"audio/woord-mat.m4a","woord-mees":"audio/woord-mees.m4a","woord-mes":"audio/woord-mes.m4a","woord-mier":"audio/woord-mier.m4a","woord-mok":"audio/woord-mok.m4a","woord-mol":"audio/woord-mol.m4a","woord-mop":"audio/woord-mop.m4a","woord-mot":"audio/woord-mot.m4a","woord-mug":"audio/woord-mug.m4a","woord-muis":"audio/woord-muis.m4a","woord-mus":"audio/woord-mus.m4a","woord-muur":"audio/woord-muur.m4a","woord-naam":"audio/woord-naam.m4a","woord-neef":"audio/woord-neef.m4a","woord-nek":"audio/woord-nek.m4a","woord-net":"audio/woord-net.m4a","woord-nok":"audio/woord-nok.m4a","woord-noot":"audio/woord-noot.m4a","woord-oor":"audio/woord-oor.m4a","woord-oorlog":"audio/woord-oorlog.m4a","woord-paal":"audio/woord-paal.m4a","woord-paar":"audio/woord-paar.m4a","woord-pad":"audio/woord-pad.m4a","woord-pak":"audio/woord-pak.m4a","woord-pan":"audio/woord-pan.m4a","woord-pauw":"audio/woord-pauw.m4a","woord-peer":"audio/woord-peer.m4a","woord-pen":"audio/woord-pen.m4a","woord-pet":"audio/woord-pet.m4a","woord-pil":"audio/woord-pil.m4a","woord-pin":"audio/woord-pin.m4a","woord-pit":"audio/woord-pit.m4a","woord-plaat":"audio/woord-plaat.m4a","woord-plak":"audio/woord-plak.m4a","woord-plas":"audio/woord-plas.m4a","woord-plein":"audio/woord-plein.m4a","woord-plek":"audio/woord-plek.m4a","woord-poel":"audio/woord-poel.m4a","woord-poes":"audio/woord-poes.m4a","woord-pool":"audio/woord-pool.m4a","woord-poot":"audio/woord-poot.m4a","woord-pop":"audio/woord-pop.m4a","woord-pot":"audio/woord-pot.m4a","woord-prop":"audio/woord-prop.m4a","woord-pruim":"audio/woord-pruim.m4a","woord-put":"audio/woord-put.m4a","woord-raaf":"audio/woord-raaf.m4a","woord-raam":"audio/woord-raam.m4a","woord-ram":"audio/woord-ram.m4a","woord-rat":"audio/woord-rat.m4a","woord-reep":"audio/woord-reep.m4a","woord-rek":"audio/woord-rek.m4a","woord-reus":"audio/woord-reus.m4a","woord-riem":"audio/woord-riem.m4a","woord-rok":"audio/woord-rok.m4a","woord-rol":"audio/woord-rol.m4a","woord-room":"audio/woord-room.m4a","woord-roos":"audio/woord-roos.m4a","woord-rots":"audio/woord-rots.m4a","woord-rug":"audio/woord-rug.m4a","woord-rups":"audio/woord-rups.m4a","woord-schaal":"audio/woord-schaal.m4a","woord-schaap":"audio/woord-schaap.m4a","woord-schip":"audio/woord-schip.m4a","woord-school":"audio/woord-school.m4a","woord-schop":"audio/woord-schop.m4a","woord-schot":"audio/woord-schot.m4a","woord-schuur":"audio/woord-schuur.m4a","woord-slak":"audio/woord-slak.m4a","woord-sloot":"audio/woord-sloot.m4a","woord-slot":"audio/woord-slot.m4a","woord-sok":"audio/woord-sok.m4a","woord-spaak":"audio/woord-spaak.m4a","woord-speer":"audio/woord-speer.m4a","woord-spel":"audio/woord-spel.m4a","woord-spin":"audio/woord-spin.m4a","woord-spleet":"audio/woord-spleet.m4a","woord-spoel":"audio/woord-spoel.m4a","woord-spoor":"audio/woord-spoor.m4a","woord-staal":"audio/woord-staal.m4a","woord-stad":"audio/woord-stad.m4a","woord-staf":"audio/woord-staf.m4a","woord-stam":"audio/woord-stam.m4a","woord-stap":"audio/woord-stap.m4a","woord-steen":"audio/woord-steen.m4a","woord-stek":"audio/woord-stek.m4a","woord-stem":"audio/woord-stem.m4a","woord-ster":"audio/woord-ster.m4a","woord-stoel":"audio/woord-stoel.m4a","woord-stok":"audio/woord-stok.m4a","woord-stop":"audio/woord-stop.m4a","woord-straat":"audio/woord-straat.m4a","woord-strand":"audio/woord-strand.m4a","woord-streep":"audio/woord-streep.m4a","woord-stroom":"audio/woord-stroom.m4a","woord-stuk":"audio/woord-stuk.m4a","woord-stuur":"audio/woord-stuur.m4a","woord-taak":"audio/woord-taak.m4a","woord-taal":"audio/woord-taal.m4a","woord-tak":"audio/woord-tak.m4a","woord-tas":"audio/woord-tas.m4a","woord-teen":"audio/woord-teen.m4a","woord-tip":"audio/woord-tip.m4a","woord-tol":"audio/woord-tol.m4a","woord-ton":"audio/woord-ton.m4a","woord-toon":"audio/woord-toon.m4a","woord-top":"audio/woord-top.m4a","woord-traan":"audio/woord-traan.m4a","woord-trap":"audio/woord-trap.m4a","woord-trein":"audio/woord-trein.m4a","woord-trom":"audio/woord-trom.m4a","woord-troon":"audio/woord-troon.m4a","woord-tuin":"audio/woord-tuin.m4a","woord-uil":"audio/woord-uil.m4a","woord-uur":"audio/woord-uur.m4a","woord-vaas":"audio/woord-vaas.m4a","woord-vat":"audio/woord-vat.m4a","woord-veer":"audio/woord-veer.m4a","woord-vin":"audio/woord-vin.m4a","woord-vis":"audio/woord-vis.m4a","woord-vlek":"audio/woord-vlek.m4a","woord-vloer":"audio/woord-vloer.m4a","woord-vos":"audio/woord-vos.m4a","woord-vuur":"audio/woord-vuur.m4a","woord-week":"audio/woord-week.m4a","woord-weg":"audio/woord-weg.m4a","woord-wip":"audio/woord-wip.m4a","woord-wolf":"audio/woord-wolf.m4a","woord-wortel":"audio/woord-wortel.m4a","woord-zaad":"audio/woord-zaad.m4a","woord-zaak":"audio/woord-zaak.m4a","woord-zaal":"audio/woord-zaal.m4a","woord-zak":"audio/woord-zak.m4a","woord-zeehond":"audio/woord-zeehond.m4a","woord-zeil":"audio/woord-zeil.m4a","woord-zin":"audio/woord-zin.m4a","woord-zon":"audio/woord-zon.m4a","woord-zool":"audio/woord-zool.m4a","woord-zoom":"audio/woord-zoom.m4a","woord-zoon":"audio/woord-zoon.m4a","woord-zus":"audio/woord-zus.m4a","woord-zwaan":"audio/woord-zwaan.m4a","zin-aap":"audio/zin-aap.m4a","zin-appel":"audio/zin-appel.m4a","zin-baan":"audio/zin-baan.m4a","zin-baas":"audio/zin-baas.m4a","zin-bad":"audio/zin-bad.m4a","zin-bak":"audio/zin-bak.m4a","zin-bal":"audio/zin-bal.m4a","zin-bed":"audio/zin-bed.m4a","zin-beek":"audio/zin-beek.m4a","zin-been":"audio/zin-been.m4a","zin-beer":"audio/zin-beer.m4a","zin-beet":"audio/zin-beet.m4a","zin-bek":"audio/zin-bek.m4a","zin-bel":"audio/zin-bel.m4a","zin-berg":"audio/zin-berg.m4a","zin-bes":"audio/zin-bes.m4a","zin-beuk":"audio/zin-beuk.m4a","zin-bevel":"audio/zin-bevel.m4a","zin-bier":"audio/zin-bier.m4a","zin-bil":"audio/zin-bil.m4a","zin-blad":"audio/zin-blad.m4a","zin-bloem":"audio/zin-bloem.m4a","zin-blok":"audio/zin-blok.m4a","zin-boek":"audio/zin-boek.m4a","zin-boer":"audio/zin-boer.m4a","zin-bok":"audio/zin-bok.m4a","zin-bol":"audio/zin-bol.m4a","zin-bom":"audio/zin-bom.m4a","zin-bon":"audio/zin-bon.m4a","zin-boog":"audio/zin-boog.m4a","zin-boom":"audio/zin-boom.m4a","zin-boon":"audio/zin-boon.m4a","zin-boor":"audio/zin-boor.m4a","zin-boot":"audio/zin-boot.m4a","zin-bos":"audio/zin-bos.m4a","zin-bot":"audio/zin-bot.m4a","zin-brief":"audio/zin-brief.m4a","zin-bril":"audio/zin-bril.m4a","zin-broek":"audio/zin-broek.m4a","zin-brug":"audio/zin-brug.m4a","zin-bul":"audio/zin-bul.m4a","zin-bus":"audio/zin-bus.m4a","zin-buur":"audio/zin-buur.m4a","zin-daad":"audio/zin-daad.m4a","zin-dag":"audio/zin-dag.m4a","zin-dak":"audio/zin-dak.m4a","zin-dal":"audio/zin-dal.m4a","zin-dam":"audio/zin-dam.m4a","zin-das":"audio/zin-das.m4a","zin-deel":"audio/zin-deel.m4a","zin-deur":"audio/zin-deur.m4a","zin-dief":"audio/zin-dief.m4a","zin-dier":"audio/zin-dier.m4a","zin-doek":"audio/zin-doek.m4a","zin-doos":"audio/zin-doos.m4a","zin-dop":"audio/zin-dop.m4a","zin-draad":"audio/zin-draad.m4a","zin-droom":"audio/zin-droom.m4a","zin-duif":"audio/zin-duif.m4a","zin-duim":"audio/zin-duim.m4a","zin-duin":"audio/zin-duin.m4a","zin-egel":"audio/zin-egel.m4a","zin-fles":"audio/zin-fles.m4a","zin-gat":"audio/zin-gat.m4a","zin-gebed":"audio/zin-gebed.m4a","zin-geit":"audio/zin-geit.m4a","zin-gil":"audio/zin-gil.m4a","zin-glas":"audio/zin-glas.m4a","zin-god":"audio/zin-god.m4a","zin-graaf":"audio/zin-graaf.m4a","zin-graat":"audio/zin-graat.m4a","zin-graf":"audio/zin-graf.m4a","zin-haag":"audio/zin-haag.m4a","zin-haak":"audio/zin-haak.m4a","zin-haan":"audio/zin-haan.m4a","zin-haas":"audio/zin-haas.m4a","zin-hak":"audio/zin-hak.m4a","zin-hap":"audio/zin-hap.m4a","zin-heer":"audio/zin-heer.m4a","zin-hek":"audio/zin-hek.m4a","zin-hoed":"audio/zin-hoed.m4a","zin-hoes":"audio/zin-hoes.m4a","zin-hof":"audio/zin-hof.m4a","zin-hol":"audio/zin-hol.m4a","zin-huis":"audio/zin-huis.m4a","zin-hut":"audio/zin-hut.m4a","zin-jaar":"audio/zin-jaar.m4a","zin-jas":"audio/zin-jas.m4a","zin-kaak":"audio/zin-kaak.m4a","zin-kaas":"audio/zin-kaas.m4a","zin-kalf":"audio/zin-kalf.m4a","zin-kam":"audio/zin-kam.m4a","zin-kan":"audio/zin-kan.m4a","zin-kap":"audio/zin-kap.m4a","zin-kar":"audio/zin-kar.m4a","zin-kat":"audio/zin-kat.m4a","zin-kin":"audio/zin-kin.m4a","zin-kip":"audio/zin-kip.m4a","zin-klap":"audio/zin-klap.m4a","zin-kleed":"audio/zin-kleed.m4a","zin-klok":"audio/zin-klok.m4a","zin-knol":"audio/zin-knol.m4a","zin-knop":"audio/zin-knop.m4a","zin-koek":"audio/zin-koek.m4a","zin-kok":"audio/zin-kok.m4a","zin-kom":"audio/zin-kom.m4a","zin-kool":"audio/zin-kool.m4a","zin-koor":"audio/zin-koor.m4a","zin-kop":"audio/zin-kop.m4a","zin-kous":"audio/zin-kous.m4a","zin-kraag":"audio/zin-kraag.m4a","zin-kraai":"audio/zin-kraai.m4a","zin-kraal":"audio/zin-kraal.m4a","zin-kraam":"audio/zin-kraam.m4a","zin-kraan":"audio/zin-kraan.m4a","zin-kreeft":"audio/zin-kreeft.m4a","zin-kroon":"audio/zin-kroon.m4a","zin-kruik":"audio/zin-kruik.m4a","zin-kruk":"audio/zin-kruk.m4a","zin-kuip":"audio/zin-kuip.m4a","zin-kus":"audio/zin-kus.m4a","zin-laan":"audio/zin-laan.m4a","zin-lak":"audio/zin-lak.m4a","zin-lap":"audio/zin-lap.m4a","zin-lat":"audio/zin-lat.m4a","zin-les":"audio/zin-les.m4a","zin-lid":"audio/zin-lid.m4a","zin-lied":"audio/zin-lied.m4a","zin-lijf":"audio/zin-lijf.m4a","zin-lip":"audio/zin-lip.m4a","zin-loon":"audio/zin-loon.m4a","zin-lot":"audio/zin-lot.m4a","zin-lus":"audio/zin-lus.m4a","zin-maan":"audio/zin-maan.m4a","zin-maat":"audio/zin-maat.m4a","zin-man":"audio/zin-man.m4a","zin-map":"audio/zin-map.m4a","zin-mat":"audio/zin-mat.m4a","zin-meer":"audio/zin-meer.m4a","zin-mees":"audio/zin-mees.m4a","zin-mes":"audio/zin-mes.m4a","zin-mier":"audio/zin-mier.m4a","zin-mok":"audio/zin-mok.m4a","zin-mol":"audio/zin-mol.m4a","zin-mop":"audio/zin-mop.m4a","zin-mot":"audio/zin-mot.m4a","zin-mug":"audio/zin-mug.m4a","zin-muis":"audio/zin-muis.m4a","zin-mus":"audio/zin-mus.m4a","zin-muur":"audio/zin-muur.m4a","zin-naad":"audio/zin-naad.m4a","zin-naam":"audio/zin-naam.m4a","zin-neef":"audio/zin-neef.m4a","zin-nek":"audio/zin-nek.m4a","zin-net":"audio/zin-net.m4a","zin-nok":"audio/zin-nok.m4a","zin-noot":"audio/zin-noot.m4a","zin-oor":"audio/zin-oor.m4a","zin-oorlog":"audio/zin-oorlog.m4a","zin-paal":"audio/zin-paal.m4a","zin-paar":"audio/zin-paar.m4a","zin-pad":"audio/zin-pad.m4a","zin-pak":"audio/zin-pak.m4a","zin-pan":"audio/zin-pan.m4a","zin-pauw":"audio/zin-pauw.m4a","zin-peer":"audio/zin-peer.m4a","zin-pen":"audio/zin-pen.m4a","zin-pet":"audio/zin-pet.m4a","zin-pil":"audio/zin-pil.m4a","zin-pin":"audio/zin-pin.m4a","zin-pit":"audio/zin-pit.m4a","zin-plaat":"audio/zin-plaat.m4a","zin-plak":"audio/zin-plak.m4a","zin-plas":"audio/zin-plas.m4a","zin-plein":"audio/zin-plein.m4a","zin-plek":"audio/zin-plek.m4a","zin-poel":"audio/zin-poel.m4a","zin-poes":"audio/zin-poes.m4a","zin-pool":"audio/zin-pool.m4a","zin-poot":"audio/zin-poot.m4a","zin-pop":"audio/zin-pop.m4a","zin-pot":"audio/zin-pot.m4a","zin-prop":"audio/zin-prop.m4a","zin-pruim":"audio/zin-pruim.m4a","zin-put":"audio/zin-put.m4a","zin-raad":"audio/zin-raad.m4a","zin-raaf":"audio/zin-raaf.m4a","zin-raam":"audio/zin-raam.m4a","zin-ram":"audio/zin-ram.m4a","zin-rat":"audio/zin-rat.m4a","zin-reep":"audio/zin-reep.m4a","zin-rek":"audio/zin-rek.m4a","zin-reus":"audio/zin-reus.m4a","zin-rib":"audio/zin-rib.m4a","zin-riem":"audio/zin-riem.m4a","zin-rok":"audio/zin-rok.m4a","zin-rol":"audio/zin-rol.m4a","zin-room":"audio/zin-room.m4a","zin-roos":"audio/zin-roos.m4a","zin-rots":"audio/zin-rots.m4a","zin-rug":"audio/zin-rug.m4a","zin-rups":"audio/zin-rups.m4a","zin-schaal":"audio/zin-schaal.m4a","zin-schaap":"audio/zin-schaap.m4a","zin-schip":"audio/zin-schip.m4a","zin-school":"audio/zin-school.m4a","zin-schop":"audio/zin-schop.m4a","zin-schot":"audio/zin-schot.m4a","zin-schuur":"audio/zin-schuur.m4a","zin-slak":"audio/zin-slak.m4a","zin-sloot":"audio/zin-sloot.m4a","zin-slot":"audio/zin-slot.m4a","zin-sok":"audio/zin-sok.m4a","zin-spaak":"audio/zin-spaak.m4a","zin-speer":"audio/zin-speer.m4a","zin-spel":"audio/zin-spel.m4a","zin-spin":"audio/zin-spin.m4a","zin-spleet":"audio/zin-spleet.m4a","zin-spoel":"audio/zin-spoel.m4a","zin-spoor":"audio/zin-spoor.m4a","zin-staal":"audio/zin-staal.m4a","zin-stad":"audio/zin-stad.m4a","zin-staf":"audio/zin-staf.m4a","zin-stam":"audio/zin-stam.m4a","zin-stap":"audio/zin-stap.m4a","zin-steen":"audio/zin-steen.m4a","zin-stek":"audio/zin-stek.m4a","zin-stem":"audio/zin-stem.m4a","zin-ster":"audio/zin-ster.m4a","zin-stoel":"audio/zin-stoel.m4a","zin-stok":"audio/zin-stok.m4a","zin-stop":"audio/zin-stop.m4a","zin-straat":"audio/zin-straat.m4a","zin-strand":"audio/zin-strand.m4a","zin-streep":"audio/zin-streep.m4a","zin-stroom":"audio/zin-stroom.m4a","zin-stuk":"audio/zin-stuk.m4a","zin-stuur":"audio/zin-stuur.m4a","zin-taak":"audio/zin-taak.m4a","zin-taal":"audio/zin-taal.m4a","zin-tak":"audio/zin-tak.m4a","zin-tas":"audio/zin-tas.m4a","zin-teen":"audio/zin-teen.m4a","zin-tip":"audio/zin-tip.m4a","zin-tol":"audio/zin-tol.m4a","zin-ton":"audio/zin-ton.m4a","zin-toon":"audio/zin-toon.m4a","zin-top":"audio/zin-top.m4a","zin-traan":"audio/zin-traan.m4a","zin-trap":"audio/zin-trap.m4a","zin-trein":"audio/zin-trein.m4a","zin-trom":"audio/zin-trom.m4a","zin-troon":"audio/zin-troon.m4a","zin-tuin":"audio/zin-tuin.m4a","zin-uil":"audio/zin-uil.m4a","zin-uur":"audio/zin-uur.m4a","zin-vaas":"audio/zin-vaas.m4a","zin-vat":"audio/zin-vat.m4a","zin-veer":"audio/zin-veer.m4a","zin-vin":"audio/zin-vin.m4a","zin-vis":"audio/zin-vis.m4a","zin-vlek":"audio/zin-vlek.m4a","zin-vloer":"audio/zin-vloer.m4a","zin-vos":"audio/zin-vos.m4a","zin-vuur":"audio/zin-vuur.m4a","zin-week":"audio/zin-week.m4a","zin-weg":"audio/zin-weg.m4a","zin-wip":"audio/zin-wip.m4a","zin-wolf":"audio/zin-wolf.m4a","zin-wortel":"audio/zin-wortel.m4a","zin-zaad":"audio/zin-zaad.m4a","zin-zaak":"audio/zin-zaak.m4a","zin-zaal":"audio/zin-zaal.m4a","zin-zak":"audio/zin-zak.m4a","zin-zeehond":"audio/zin-zeehond.m4a","zin-zeil":"audio/zin-zeil.m4a","zin-zin":"audio/zin-zin.m4a","zin-zon":"audio/zin-zon.m4a","zin-zool":"audio/zin-zool.m4a","zin-zoom":"audio/zin-zoom.m4a","zin-zoon":"audio/zin-zoon.m4a","zin-zus":"audio/zin-zus.m4a","zin-zwaan":"audio/zin-zwaan.m4a"};window.__plImages={};</script><script>window.__plDemoFixture={
  "naam": "Twee weken oefenen (voorbeeld, geen echte data)",
  "uitleg": "Dagen zijn relatief aan vandaag (dag -1 = gisteren). Tafels: 2, 10 en 5 gaan vanzelf; 7 × 8 en 6 × 7 komen terug; gisteren de doorbraak. Rekenmuur: samen 10 gaat vanzelf, de brug over 10 is nieuw.",
  "trainingen": {
@@ -1680,12 +1766,46 @@ PL.ai = async function(prompt){
   catch(e){ const code = e && e.code; if (["not_granted", "sampling_disabled", "not_declared", "capability_disabled"].includes(code)){ aiOff = true; aiKind = "uitgezet door de kijker"; } return null; }
 };
 
-PL.canSay = (() => { try { return "speechSynthesis" in window; } catch(e){ return false; } })();
-PL.say = function(text){
-  if (!PL.canSay) return;
-  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); u.lang = "nl-NL"; u.rate = 0.85;
-    const v = speechSynthesis.getVoices().find(v => v.lang && v.lang.toLowerCase().startsWith("nl")); if (v) u.voice = v; speechSynthesis.speak(u); } catch(e){}
+/* v0.15 · de stemmen van groep 3: eerst een vooraf gemaakt bestand (audio/<id>.m4a, via window.__plAudio), anders de
+   Nederlandse stem van de browser. Eén hergebruikt <audio>-element; het eerste geluid start altijd na een tik (iOS). */
+const AUD = () => window.__plAudio || {};
+let audioEl = null, ttsVoice = null;
+const pickVoice = () => { try { const vs = speechSynthesis.getVoices() || [];
+  ttsVoice = vs.find(v => /^nl[-_]NL/i.test(v.lang) && /xander|claire/i.test(v.name)) || vs.find(v => /^nl[-_]NL/i.test(v.lang)) || vs.find(v => /^nl/i.test(v.lang)) || null; } catch(e){ ttsVoice = null; } };
+try { if ("speechSynthesis" in window){ pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; } } catch(e){}
+PL.audio = {has: id => !!(id && AUD()[id]), played: [], spoken: [], el: () => audioEl};   // played/spoken: voor tests en het ouderscherm
+PL.canSay = (() => { try { return "speechSynthesis" in window || Object.keys(AUD()).length > 0; } catch(e){ return false; } })();
+PL.say = function(text, id){
+  try { if ("speechSynthesis" in window) speechSynthesis.cancel(); } catch(e){}
+  try { if (audioEl) audioEl.pause(); } catch(e){}
+  const AUDIO = AUD();
+  if (id && AUDIO[id]){
+    PL.audio.played.push(id);
+    try { if (!audioEl){ audioEl = new Audio(); audioEl.preload = "auto"; try { if (navigator.audioSession) navigator.audioSession.type = "playback"; } catch(e){} }
+      clearTimeout(PL.audio._stop); audioEl.ontimeupdate = null;
+      /* "bestand#t=a,b": een stuk uit één bestand (de chatversie heeft hooguit 511 bestanden). Zelf zoeken en stoppen:
+         browsers doen het fragment niet betrouwbaar. */
+      const m = /^(.*)#t=([\d.]+),([\d.]+)$/.exec(AUDIO[id]);
+      if (m){ const url = new URL(m[1], location.href).href, a = +m[2], b = +m[3];
+        if (audioEl.src !== url) audioEl.src = url;
+        const go = () => { try { audioEl.currentTime = a; } catch(e){} const p = audioEl.play(); if (p && p.catch) p.catch(() => speak(text));
+          audioEl.ontimeupdate = () => { if (audioEl.currentTime >= b){ audioEl.pause(); audioEl.ontimeupdate = null; } };
+          PL.audio._stop = setTimeout(() => { audioEl.pause(); audioEl.ontimeupdate = null; }, (b - a) * 1000 + 150);
+          /* kan de server niet zoeken (geen Range), dan zou het verkeerde stuk klinken: dan de browserstem */
+          setTimeout(() => { if (!audioEl.paused && audioEl.currentTime < a - 0.05){ audioEl.pause(); clearTimeout(PL.audio._stop); speak(text); } }, 200); };
+        if (audioEl.readyState >= 1) go(); else { audioEl.addEventListener("loadedmetadata", go, {once: true}); audioEl.load(); }
+      } else { audioEl.src = AUDIO[id]; audioEl.currentTime = 0; const p = audioEl.play(); if (p && p.catch) p.catch(() => speak(text)); }
+    } catch(e){ speak(text); }
+    return;
+  }
+  speak(text);
 };
+function speak(text){
+  if (!text || !("speechSynthesis" in window)) return;
+  PL.audio.spoken.push(text);
+  try { const u = new SpeechSynthesisUtterance(text); u.lang = "nl-NL"; u.rate = 0.85; if (ttsVoice) u.voice = ttsVoice; PL.audio._u = u; speechSynthesis.speak(u); } catch(e){}
+}
+PL.slug = t => String(t || "").normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
 const AGAIN = ["Nog een keer: zo leer je het echt.", "Goed plan. Elke ronde maakt het steviger.", "Daar gaan we weer. Nieuwe ronde.", "Herhalen is trainen. Net als bij ballet."];
 
@@ -1967,10 +2087,14 @@ function rowHTML(R, states, todayId, make){
   const isToday = !make && (isG ? R.members.some(m => m.id === todayId) : R.id === todayId);
   const attr = isG ? `data-group="${esc(R.id)}"` : make ? `data-make="${esc(R.id)}"` : `data-start="${esc(R.id)}"`;
   // a11y: de knop krijgt één duidelijke naam (titel, vak, status, voortgang)
-  const label = `${R.title}. ${sub}. ${isToday ? "Vandaag. " : ""}${pr.status}.${pr.known ? " " + pr.text : ""}`;
+  // v0.16 (Von Restorff): alleen wat anders is valt op: Nieuw, of iets wat klaarstaat om te herhalen. Vandaag gedaan zegt niets extra's.
+  let due = false; try { due = !make && !isG && !!states[R.id] && PL.stem.sig.dueToday(states[R.id]).length > 0; } catch(e){}
+  const trainedToday = pr.sessions && pr.last === today();
+  const stat = !pr.sessions ? {t: "Nieuw", c: " s-nieuw"} : due ? {t: "Er staat iets klaar", c: " s-klaar"} : trainedToday ? {t: pr.known ? pr.text : "", c: ""} : {t: pr.status, c: ""};
+  const label = `${R.title}. ${sub}. ${isToday ? "Vandaag. " : ""}${stat.t ? stat.t + "." : ""}`;
   return `<button type="button" class="pl-listrow pl-card-row" ${attr} aria-label="${esc(label)}">${catIcon(R.cat || catOf(R))}
-    <span class="pl-listtext"><span class="pl-rowtop"><b>${esc(R.title)}</b>${isToday ? `<span class="pl-tag">Vandaag</span>` : ""}</span><span class="pl-sub">${esc(sub)}</span>
-    ${make ? "" : `<span class="pl-status${pr.sessions ? "" : " s-nieuw"}">${esc(pr.status)}</span>`}</span><span class="pl-chev" aria-hidden="true"></span></button>`;
+    <span class="pl-listtext"><span class="pl-rowtop"><b>${esc(R.title)}</b></span><span class="pl-sub">${esc(sub)}</span>
+    ${make || !stat.t ? "" : `<span class="pl-status${stat.c}">${esc(stat.t)}</span>`}</span><span class="pl-chev" aria-hidden="true"></span></button>`;
 }
 function groupedList(states, todayId, make){
   const rows = listRows();
@@ -2098,7 +2222,6 @@ PL.home = async function(){
     <div class="pl-area-tuin">
       <div class="pl-card pl-tuinkaart">
         <div class="pl-row pl-between"><h2 class="pl-eyebrow pl-cathead">Mijn tuin</h2></div>
-        <div class="pl-tuinwrap pl-tuin-onder" id="pl-tuin" aria-hidden="true"></div>
         <p class="pl-lead pl-grown">${anyRound ? esc(grown || "Je tuin groeit met elke ronde die je afmaakt.") : "Hier groeit je tuin. Maak je eerste ronde af, dan komt er iets op."}</p>
         <button type="button" class="pl-btn quiet pl-full" id="pl-open-tuin">Bekijk mijn tuin</button>
       </div>
@@ -2106,10 +2229,11 @@ PL.home = async function(){
   app.querySelectorAll("[data-start]").forEach(b => b.addEventListener("click", () => { setRoute(b.dataset.start); PL.start(trainings.find(t => t.id === b.dataset.start), {routed: true}); }));
   app.querySelectorAll("[data-resume]").forEach(b => b.addEventListener("click", () => { setRoute(b.dataset.resume + "/ronde"); PL.start(trainings.find(t => t.id === b.dataset.resume), {resume: true, routed: true}); }));
   app.querySelectorAll("[data-group]").forEach(b => b.addEventListener("click", () => showGroup(b.dataset.group, false, states)));
-  if (PL.tuin) PL.tuin($("pl-tuin"), {states: mergeGroups(states), strook: true});
+  // v0.21: de tuin staat beeldvullend achter het openingsscherm; de kaarten zijn van glas
+  app.insertAdjacentHTML("afterbegin", `<div class="pl-achter" id="pl-tuin" aria-hidden="true"></div>`);
+  if (PL.tuin) PL.tuin($("pl-tuin"), {states: mergeGroups(states), vol: true});
   const openT = () => showHomeGarden(states);
   $("pl-open-tuin").addEventListener("click", openT);
-  $("pl-tuin").addEventListener("click", openT);
   $("pl-make").addEventListener("click", () => showHomeMake(states));
   wireParent(null, states);
 };
@@ -2165,12 +2289,15 @@ async function showHomeGarden(states, fromRoute, openId){
   else if (groei && (!top || Math.random() < .5)) rups = st.say("rups.groei", {item: st.label(groei.T, groei.nk.k), dag: st.dag(groei.nk.d), training: groei.T.groupTitle || groei.T.title, genus: st.genus(groei.T)}, mem);
   else if (top) rups = st.say("rups.week", {training: top.T.groupTitle || top.T.title, rondes: st.aantal(top.n, "rondes")}, mem);
   const rows = listRows().map(R => { const T = rowTraining(R, states); return {R, T, line: perkLine(Object.assign(Object.create(T), {title: R.title}), states[T.id], mem)}; });
-  sec.innerHTML = `<div class="pl-card pl-narrow pl-tuinpagina" style="display:grid;gap:12px">
-      ${rups ? `<p class="pl-rups" aria-live="polite">${esc(rups)}</p>` : ""}
-      <div class="pl-tuinwrap" id="pl-tuin"></div>
-      <ul class="pl-grownlist pl-perken">${rows.map(({R, line}) => `<li><button type="button" class="pl-perk" data-perk="${esc(R.id)}" aria-expanded="false" aria-controls="pl-res-${esc(R.id)}"><b>${esc(R.title)}</b><span>${esc(line)}</span><span class="pl-chev" aria-hidden="true"></span></button><div class="pl-result" id="pl-res-${esc(R.id)}" aria-live="polite" hidden></div></li>`).join("")}</ul>
-    </div>`;
+  sec.innerHTML = `<div class="pl-tuinvol pl-tuinpagina" id="pl-tuin"></div>
+      ${rups ? `<p class="pl-rups pl-tuinwolk" aria-live="polite">${esc(rups)}</p>` : ""}
+      <div class="pl-card pl-tuinpaneel"><button type="button" class="pl-btn quiet pl-full pl-paneelknop" id="pl-paneel" aria-expanded="false" aria-controls="pl-paneelin">Wat er groeit<span class="pl-chev" aria-hidden="true"></span></button>
+      <div class="pl-paneelin" id="pl-paneelin" hidden><ul class="pl-grownlist pl-perken">${rows.map(({R, line}) => `<li><button type="button" class="pl-perk" data-perk="${esc(R.id)}" aria-expanded="false" aria-controls="pl-res-${esc(R.id)}"><b>${esc(R.title)}</b><span>${esc(line)}</span><span class="pl-chev" aria-hidden="true"></span></button><div class="pl-result" id="pl-res-${esc(R.id)}" aria-live="polite" hidden></div></li>`).join("")}</ul></div></div>`;
+  // v0.21: het paneel met de trainingen open en dicht
+  const paneel = on => { const k = $("pl-paneel"); k.setAttribute("aria-expanded", String(on)); $("pl-paneelin").hidden = !on; };
+  $("pl-paneel").addEventListener("click", () => paneel($("pl-paneel").getAttribute("aria-expanded") !== "true"));
   const open = id => {
+    if (id) paneel(true);
     sec.querySelectorAll(".pl-perk").forEach(b => { const on = b.dataset.perk === id && b.getAttribute("aria-expanded") !== "true"; b.setAttribute("aria-expanded", String(on)); const box = $("pl-res-" + b.dataset.perk); box.hidden = !on;
       if (on){ const x = rows.find(r => r.R.id === b.dataset.perk), bl = resultBlocks(x.T, states[x.T.id], mem); box.innerHTML = bl.length ? resultHTML(bl) + `<button type="button" class="pl-help" data-go="${esc(x.T.id)}">Naar ${esc(x.R.title)}</button>` : `<p>${esc(x.line)}</p><button type="button" class="pl-help" data-go="${esc(x.T.id)}">Naar ${esc(x.R.title)}</button>`;
         box.querySelector("[data-go]").addEventListener("click", e => { const t = trainings.find(t => t.id === e.currentTarget.dataset.go); setRoute(t.id); PL.start(t, {routed: true}); }); } });
@@ -2178,7 +2305,7 @@ async function showHomeGarden(states, fromRoute, openId){
     st.saveMem(store);
   };
   sec.querySelectorAll(".pl-perk").forEach(b => b.addEventListener("click", () => open(b.dataset.perk)));
-  if (PL.tuin) PL.tuin($("pl-tuin"), {states: mergeGroups(states)}).then(() => {
+  if (PL.tuin) PL.tuin($("pl-tuin"), {states: mergeGroups(states), vol: true}).then(() => {
     // een perk in de tuin aantikken opent dezelfde kaart (europa = het perk van Landen van de wereld)
     sec.querySelectorAll("#pl-tuin [data-bed]").forEach(bed => { bed.style.cursor = "pointer"; bed.addEventListener("click", () => { const id = bed.dataset.bed, R = listRows().find(r => r.id === id || (r.isGroup && r.members.some(m => m.id === id))); if (R){ open(R.id); const el = sec.querySelector(`[data-perk="${R.id}"]`); if (el) el.scrollIntoView({block: "nearest", behavior: "smooth"}); } }); });
   });
@@ -2257,6 +2384,7 @@ PL.start = async function(T, opts){
   let sessionAdded = false, form = data.lastForm || "A", lastRound = null, factShown = false, wheelRun = 0, wheelCount = 0, custom = null;
   let wiseShown = false, aiNoteShown = false, roundAdj = null, tried = null;
   let cur_ = null, okVoice = () => "";
+  let prevOk = null;   // v0.17: wat er net lukte, als regel boven de volgende vraag
   let roundFeel = null, feelUsed = false, feelRulesOpened = false, feelStone = null, feelOpenT = 0;   // v0.13 Te makkelijk / Pittig   // v0.12: de vraag die nu loopt (voor de stem na "Gelukt")
   /* tijdens een ronde staat "Laat zien" (het scherm voor papa of je zus) niet in de kop: hulp bij de vraag zit in de ronde zelf */
   const topBtn = on => { const b = $("pl-garden-btn"); if (b) b.hidden = on; };
@@ -2275,6 +2403,10 @@ PL.start = async function(T, opts){
       $("pl-verder").addEventListener("click", done);
     });
   }
+  function showPrev(){ const el = $("pl-prev"); if (!el) return; if (!prevOk || !queueLeft()){ el.hidden = true; return; }
+    el.innerHTML = `<b>Gelukt</b>${esc(prevOk.text)}${prevOk.extra ? ` <span class="pl-prev-stem">${esc(prevOk.extra)}</span>` : ""}`; el.hidden = false; prevOk = null; }
+  function hidePrev(){ const el = $("pl-prev"); if (el) el.hidden = true; }
+  let queueLeft = () => true;
   let runId = 0, inRound = false;   // een ronde die verlaten wordt, krijgt een nieuw runId; de oude lus stopt dan vanzelf
 
   function save(){
@@ -2314,6 +2446,16 @@ PL.start = async function(T, opts){
   }
   const known = key => { const r = data.items[key]; return !!r && r.fl >= 2 && r.last === "ok"; };
   const due = key => { const r = data.items[key]; return !!r && r.due != null && r.due <= dayNum(today()); };
+  /* v0.14 variatie binnen een sessie (ouder, 23 oktober): wat vandaag al gevraagd is en meteen lukte, komt vandaag niet meer
+     terug zolang er iets anders is; alleen wat een tussenstap nodig had, komt terug. Bewaard per dag (ook na herladen). */
+  const sessObj = () => (data.sess && data.sess.d === today() && data.sess.items) ? data.sess : (data.sess = {d: today(), items: {}});
+  const sessRec = key => sessObj().items[key];
+  // een vraag die in dezelfde ronde terugkwam (na een tussenstap) blijft "met tussenstap": hij komt de volgende ronde nog één keer
+  const sessMark = (key, first, requeue) => { const it = sessObj().items; const r = it[key] || (it[key] = {n: 0, miss: false}); r.n++; if (!requeue || !first) r.miss = !first; };
+  const sessFresh = key => { const r = sessRec(key); return !r || r.miss; };
+  /* voor de keuze van een training (choose): nog niet gevraagd = 0; met een tussenstap = naar voren; meteen goed = helemaal achteraan
+     (en "klaar om te herhalen" telt dan niet meer: die is vandaag al gecontroleerd) */
+  const sessScore = key => { const r = sessRec(key); if (!r) return 0; if (r.miss) return -12; return 40 + 3 * r.n + (due(key) ? 20 : 0); };
 
   const ctx = {
     T, data, P, sleep, shuffle, pick, rnd, esc, say: PL.say, canSay: PL.canSay, log,
@@ -2335,7 +2477,7 @@ PL.start = async function(T, opts){
       log({switch: 1, st: stoneId, from, to: next}); return next;
     },
     modeName: m => (T.explainNames && T.explainNames[m]) || "",
-    rec, known, due, stone, green,
+    rec, known, due, stone, green, sessScore, sessFresh,
     // steunniveau van het model: vol (geen beheersing), flits (beheersing, nog geen tempo), opvraag (tempo)
     support(id){
       // v0.13: een "Te makkelijk" of "Pittig" van vorige ronde zet de hulp bij die steen voor deze ronde (de toets)
@@ -2347,8 +2489,16 @@ PL.start = async function(T, opts){
     /* feedback: drie vaste vormen. Tijdens een tussenstap blijft haar eigen antwoord in beeld (C3): fb.tried(waarde). */
     fb: {
       // v0.11: "Gelukt" komt in een vaste strook onderin (geen verspringende inhoud), met een zacht toontje
-      ok(text){ tried = null; $("pl-fb").innerHTML = ""; const sh = $("pl-sheet"); if (!sh) return; const extra = okVoice(); sh.innerHTML = `<div class="pl-ok" role="status"><p class="pl-ok-text"><b>Gelukt</b>${esc(text)}</p>${extra ? `<p class="pl-ok-stem">${esc(extra)}</p>` : ""}</div>`; sh.hidden = false; requestAnimationFrame(() => sh.classList.add("open")); if (!(T.sound && T.sound.ownFeedback)) PL.chime(); },
-      step(text){ rulesShow(true); cur_.step = true; ctx.fb.clearSheet(); $("pl-fb").innerHTML = `<div class="pl-step">${tried != null ? `<span class="pl-tried">Jouw antwoord: ${esc(tried)}</span>` : ""}<b>Tussenstap</b>${esc(text)}</div>`; },
+      ok(text){ tried = null; $("pl-fb").innerHTML = "";
+        // v0.13.1: een training met eigen "goed"-beeld (Tafelreis: de kaart draait, de figuur springt) kan de strook overslaan;
+        // dan meteen door naar de volgende vraag. Voor schermlezers staat "Gelukt" wel in een onzichtbare regel.
+        if (T.okQuiet){ const sr = $("pl-sr"); if (sr) sr.textContent = "Gelukt. " + text; return; }
+        // v0.17 (Doherty): in elke training meteen door. Het groene beeld flitst kort; "Gelukt" en het waarom blijven als
+        // rustige regel boven de volgende vraag staan (lezen mag, wachten hoeft niet). Geen strook, geen Verder.
+        if (!T.okSheet){ const sr = $("pl-sr"); if (sr) sr.textContent = "Gelukt. " + text; const extra = okVoice(); prevOk = {text, extra};
+          const w = $("pl-work"); if (w){ w.classList.remove("pl-okflash"); void w.offsetWidth; w.classList.add("pl-okflash"); } return; }
+        const sh = $("pl-sheet"); if (!sh) return; const extra = okVoice(); sh.innerHTML = `<div class="pl-ok" role="status"><p class="pl-ok-text"><b>Gelukt</b>${esc(text)}</p>${extra ? `<p class="pl-ok-stem">${esc(extra)}</p>` : ""}</div>`; sh.hidden = false; requestAnimationFrame(() => sh.classList.add("open")); if (!(T.sound && T.sound.ownFeedback)) PL.chime(); },
+      step(text){ hidePrev(); rulesShow(true); cur_.step = true; ctx.fb.clearSheet(); $("pl-fb").innerHTML = `<div class="pl-step">${tried != null ? `<span class="pl-tried">Jouw antwoord: ${esc(tried)}</span>` : ""}<b>Tussenstap</b>${esc(text)}</div>`; },
       tried(v){ tried = v; },
       clearSheet(){ const sh = $("pl-sheet"); if (sh && !sh.hidden){ sh.classList.remove("open"); sh.hidden = true; sh.innerHTML = ""; } },
       note(text){ ctx.fb.clearSheet(); $("pl-fb").innerHTML = `<p class="pl-note">${esc(text)}</p>`; },
@@ -2388,25 +2538,25 @@ PL.start = async function(T, opts){
      onderin (Fitts). Een open ronde gaat voor (Zeigarnik): "Ga verder". Wat al vanzelf gaat, staat er als groei, zonder totaal. */
   function showStart(fromRoute){
     if (!fromRoute) route("");
-    app.classList.remove("pl-inround");
+    app.classList.remove("pl-inround"); app.classList.add("pl-atstart");
     const g = greeting(), gr = PL.growthOf(T, data), op = openRound(data);
     screen.innerHTML = `
       <div class="pl-intro">
       <div class="pl-card pl-startcard">
-        <h2 class="pl-h2">${esc(g.title)}</h2>
+        <h2 class="pl-h2">${esc(T.title)}</h2>
         <p class="pl-lead">${esc(T.startText(ctx))}</p>
         ${g.note ? `<p class="pl-note pl-greet">${esc(g.note)}</p>` : ""}
         ${gr.text ? `<p class="pl-grow"><span class="pl-btnflower" aria-hidden="true">${PL.flower(5, {stem: false})}</span>${esc(gr.text)}</p>` : ""}
         <div class="pl-segwrap"><span class="pl-eyebrow" id="pl-seg-l">Hoe wil je trainen?</span>
           <div class="pl-seg" role="radiogroup" aria-labelledby="pl-seg-l">${["A", "B"].map(f => `<button type="button" role="radio" class="pl-form" data-form="${f}" aria-checked="${f === form}">${esc(T.forms[f].name)}</button>`).join("")}</div>
           <p class="pl-note pl-formdesc" id="pl-formdesc">${esc(T.forms[form].desc)}</p></div>
-        ${T.startExtra ? T.startExtra(ctx) : ""}
         ${T.practices ? `<p class="pl-note pl-daarna">Daarna helpt het bij: ${esc(T.helps)}.</p>` : ""}
+        ${T.startExtra ? T.startExtra(ctx) : ""}
         <div class="pl-row pl-links">${T.allRound ? `<button class="pl-help" id="pl-all" type="button">${esc(T.allRound.label)}</button>` : ""}<button class="pl-help" id="pl-make2" type="button">Bedenk je ronde</button></div>
       </div>
       <div class="pl-actions">
         ${op ? `<p class="pl-note pl-center">Je ronde staat nog klaar: vraag ${op.i + 1} van ${op.total}.</p>` : ""}
-        <button class="pl-btn big pl-full" id="pl-go" type="button">${op ? "Ga verder" : "Start"}</button>
+        <button class="pl-btn big pl-full" id="pl-go" type="button">${op ? "Ga verder" : "Start training"}</button>
         ${op ? `<button class="pl-btn quiet pl-full" id="pl-new" type="button">Nieuwe ronde</button>` : ""}
       </div></div>`;
     screen.querySelectorAll(".pl-form").forEach(b => b.addEventListener("click", () => { form = b.dataset.form; data.lastForm = form; $("pl-formdesc").textContent = T.forms[form].desc; screen.querySelectorAll(".pl-form").forEach(x => x.setAttribute("aria-checked", String(x === b))); save(); }));
@@ -2485,7 +2635,7 @@ PL.start = async function(T, opts){
 
   function showMake(fromRoute){
     if (!fromRoute) route("bedenk");
-    app.classList.remove("pl-inround");
+    app.classList.remove("pl-inround", "pl-atstart");
     const ans = {};
     screen.innerHTML = `
       <div class="pl-card" style="display:grid;gap:12px">
@@ -2588,9 +2738,9 @@ PL.start = async function(T, opts){
       const st = stones.find(x => x.id === custom.stoneId) || stones[0];
       const items = []; let guard = 0;
       const warmSrc = custom.warmId ? stones.find(x => x.id === custom.warmId) : null;
-      if (warmSrc && warmSrc !== st && custom.n >= 6) while (items.length < P.warm && guard++ < 40){ const it = warmSrc.gen(ctx, "warm"); if (it && !items.some(x => x.key === it.key)) items.push(Object.assign(it, {warm: true, stone: warmSrc.id})); }
+      if (warmSrc && warmSrc !== st && custom.n >= 6) while (items.length < P.warm && guard++ < 40){ const it = warmSrc.gen(ctx, "warm"); if (it && !items.some(x => x.key === it.key) && (sessFresh(it.key) || guard > 25)) items.push(Object.assign(it, {warm: true, stone: warmSrc.id})); }
       guard = 0;
-      while (items.length < custom.n && guard++ < 120){ const it = st.gen(ctx, "main"); if (it && !items.some(x => x.key === it.key)) items.push(Object.assign(it, {stone: st.id})); }
+      while (items.length < custom.n && guard++ < 120){ const it = st.gen(ctx, "main"); if (it && !items.some(x => x.key === it.key) && (sessFresh(it.key) || guard > 80)) items.push(Object.assign(it, {stone: st.id})); }
       return items;
     }
     if (data.hold > 0) data.hold--;                                                            // na een stapje terug: eerst oefenen, nog niet overslaan
@@ -2602,18 +2752,30 @@ PL.start = async function(T, opts){
     const kind = roundAdj && roundAdj.kind;
     const warmN = kind === "veel" ? P.warm + 1 : kind === "lang" ? 1 : P.warm;
     const size = kind === "lang" ? 4 : P.roundSize;
-    const dueKeys = Object.keys(data.items).filter(k => due(k) && data.items[k].last === "ok");
+    const dueKeys = Object.keys(data.items).filter(k => due(k) && data.items[k].last === "ok" && !sessRec(k));   // v0.14: één keer per sessie
     for (const k of shuffle(dueKeys).slice(0, warmN)){ const it = T.fromKey(k, ctx); if (it) items.push(Object.assign(it, {warm: true, due: true, stone: T.stoneOf(k, ctx)})); }
     let guard = 0;
     while (items.length < warmN && guard++ < 30){
       const src = earlier.length ? pick(earlier) : cur;
       const it = src.gen(ctx, "warm"); if (!it) break;
-      if (!items.some(x => x.key === it.key)) items.push(Object.assign(it, {warm: true, stone: src.id}));
+      if (!items.some(x => x.key === it.key) && (sessFresh(it.key) || guard > 20)) items.push(Object.assign(it, {warm: true, stone: src.id}));
+    }
+    // v0.14: de toets van "Te makkelijk" / "Pittig" vraagt om sommen van die stap; staat de ronde al verder, dan komen er twee bij
+    if (data.feel && data.feel.st !== cur.id){ const fs = stones.find(s => s.id === data.feel.st); let g2 = 0;
+      while (fs && items.filter(x => x.stone === fs.id && !x.warm).length < 2 && g2++ < 30){ const it = fs.gen(ctx, "main"); if (it && !items.some(x => x.key === it.key)) items.push(Object.assign(it, {stone: fs.id})); } }
+    // v0.14: wat vandaag een tussenstap nodig had, komt de volgende ronde terug (ook bij trainingen die vragen willekeurig maken)
+    const okStones = new Set(stones.slice(0, data.stage).map(s => s.id));
+    for (const [k, r] of Object.entries(sessObj().items)){
+      if (items.length >= size - 2) break;
+      if (!r.miss || items.some(x => x.key === k)) continue;
+      let it = null; try { it = T.fromKey(k, ctx); } catch(e){}
+      const st = it && T.stoneOf(k, ctx); if (!it || !okStones.has(st)) continue;
+      items.push(Object.assign(it, {stone: st, terug: true}));
     }
     guard = 0;
     while (items.length < size && guard++ < 60){
       const it = cur.gen(ctx, "main");
-      if (it && !items.some(x => x.key === it.key)) items.push(Object.assign(it, {stone: cur.id}));
+      if (it && !items.some(x => x.key === it.key) && (sessFresh(it.key) || guard > 40)) items.push(Object.assign(it, {stone: cur.id}));
     }
     return items;
   }
@@ -2625,7 +2787,7 @@ PL.start = async function(T, opts){
   async function playRound(again, resume){
     const run = ++runId; inRound = true; topBtn(true);
     route("ronde", view === "ronde" || view === "klaar" || view === "bedenk");
-    app.classList.add("pl-inround");
+    app.classList.add("pl-inround"); app.classList.remove("pl-atstart");
     if (resume){ form = resume.f || form; custom = resume.c || null; }
     data.lastForm = form;
     // v0.13: wat ze vorige ronde zei (Te makkelijk / Pittig) wordt in deze ronde getoetst
@@ -2636,12 +2798,14 @@ PL.start = async function(T, opts){
     const knownBefore = new Set(Object.keys(data.items).filter(k => known(k)));
     // één schermindeling voor een ronde (B1/B2): een werkvlak van hooguit ~600 px in het midden; vraag, hulp en invoer samen in beeld
     screen.innerHTML = `<div class="pl-round" id="pl-round">
-      <div class="pl-roundprog" id="pl-roundprog" hidden><span class="pl-bar" aria-hidden="true"><i id="pl-bar-i"></i></span><span class="pl-count" id="pl-count" aria-live="off"></span>${feelHTML("ronde")}</div>
+      <div class="pl-roundprog" id="pl-roundprog" hidden><span class="pl-bar" aria-hidden="true"><i id="pl-bar-i"></i></span><span class="pl-count" id="pl-count" aria-live="off"></span></div>
       <div class="pl-ask" aria-live="polite"><span class="pl-ask-lead" id="pl-ask-lead"></span><span class="pl-ask-main" id="pl-ask-main"></span></div>
       <div class="pl-rulebar" id="pl-rulebar" hidden><button type="button" class="pl-rulebtn" id="pl-rule-btn" aria-expanded="false" aria-controls="pl-rules">${esc(T.rulesLabel || "Laat de regel zien")}</button><div class="pl-rules" id="pl-rules" hidden></div></div>
       <div class="pl-fb" id="pl-fb" aria-live="polite"></div>
       <div id="pl-work"></div>
-      <div class="pl-sheet" id="pl-sheet" aria-live="polite" hidden></div></div>`;
+      <div class="pl-prev" id="pl-prev" hidden></div>
+      ${feelHTML("ronde")}
+      <div class="pl-sheet" id="pl-sheet" aria-live="polite" hidden></div><div class="pl-sr" id="pl-sr" aria-live="polite"></div></div>`;
     ctx.work = $("pl-work");
     wireFeel();
     T.setup(ctx);
@@ -2686,6 +2850,7 @@ PL.start = async function(T, opts){
     if (again || adjNote) ctx.fb.note([again ? pick(AGAIN) : "", adjNote].filter(Boolean).join(" "));
     const restored = resume ? resume.q.map(deserItem).filter(Boolean) : null;
     const queue = restored && restored.length ? restored : composeRound();
+    queueLeft = () => queue.length > 0; prevOk = null;
     const offset = restored && restored.length ? resume.i : 0;
     const cur = custom && !custom.all ? (T.stones.find(x => x.id === custom.stoneId) || T.stones[0]) : T.stones[data.stage - 1];
     const res = {t0: new Date().toISOString().slice(0, 19), items: [], first: 0, steps: 0, fluent: 0, stoneId: cur.id, stageAtStart: data.stage, reqN: 0, reqOk: 0, hints: 0, switches: 0, modes: {}, rts: [], reqItems: [], adj: roundAdj && roundAdj.kind};
@@ -2713,6 +2878,7 @@ PL.start = async function(T, opts){
       if (run !== runId) return;   // de ronde is verlaten
       const rt = Math.max(0, Math.round(performance.now() - t0 - (r.typingMs || 0)));
       const fluent = updateItem(item.key, r.first, r.step, r.first ? rt : null);
+      sessMark(item.key, r.first, !!item.requeue);
       updateStone(item.stone, r.first, r.first ? rt : null);
       log({k: item.key, st: item.stone, f: form, ok1: r.first ? 1 : 0, step: r.step ? 1 : 0, rt, warm: item.warm ? 1 : 0, sup: r.support || "", ex: r.step ? (r.expl || "standaard") : undefined, sw: r.switches || undefined, rev: r.revealed ? 1 : undefined, cor: PL._cor || undefined});
       if (cur_.doubt && r.first) res.doubt = res.doubt || item;
@@ -2743,9 +2909,11 @@ PL.start = async function(T, opts){
       save();
       // v0.9.2: de oplossing blijft staan tot de volgende vraag: lang genoeg om "Gelukt" en het waarom te lezen
       // (1,2 s + 45 ms per teken, hooguit 7 s); "Verder" gaat meteen door. Het tempo wordt vóór deze pauze gemeten.
-      await waitNext(Math.max(T.pause || 900, Math.min(7000, 1200 + (($("pl-fb").innerText || "") + ($("pl-sheet") ? $("pl-sheet").innerText : "")).length * 45)) * (ctx.pace === "rustig" ? 1.4 : 1), run);
+      if (r.first !== undefined && !($("pl-sheet") && $("pl-sheet").querySelector(".pl-ok"))) await sleep(T.okPause || 550);   // v0.17: snel door, in elke training
+      else await waitNext(Math.max(T.pause || 900, Math.min(7000, 1200 + (($("pl-fb").innerText || "") + ($("pl-sheet") ? $("pl-sheet").innerText : "")).length * 45)) * (ctx.pace === "rustig" ? 1.4 : 1), run);
       if (run !== runId) return;
       ctx.fb.clear();
+      showPrev();
     }
     inRound = false; topBtn(false); delete data.open;
     res.knownBefore = knownBefore;
@@ -2839,12 +3007,12 @@ PL.start = async function(T, opts){
     if (custom) return `Weer jouw keuze: ${nameOf(custom.stoneId)}, met nieuwe ${T.noun}.`;
     let st = data.stage; if (!(data.hold > 0)) while (st < T.stones.length && green(T.stones[st - 1].id)) st++;
     const next = T.stones[st - 1], s_ = stone(cur.id);
-    if (moved > 0) return `Bijna alles kwam meteen en ${nameOf(cur.id)} gaat nu vanzelf. Daarom gaat de volgende ronde een stapje verder: ${next.name}.`;
-    if (moved < 0) return `Deze ronde vroeg veel tussenstappen. De volgende gaat eerst terug naar ${next.name}; daarna weer verder.`;
-    if (next.id !== cur.id) return `${cap(nameOf(cur.id))} gaat al vanzelf. De volgende ronde gaat verder met ${next.name}.`;
-    if (green(cur.id)) return `${cap(nameOf(cur.id))} gaat vanzelf. De volgende ronde houdt het vast, met nieuwe ${T.noun}.`;
-    if (s_.power) return `${cap(nameOf(cur.id))} lukt bijna altijd meteen. De volgende ronde blijft hier, tot het ook vanzelf gaat.`;
-    return `De volgende ronde blijft bij ${nameOf(cur.id)}, met nieuwe ${T.noun}${res.steps ? ". Wat vandaag een tussenstap nodig had, komt terug" : ""}.`;
+    if (moved > 0) return `${cap(nameOf(cur.id))} gaat nu vanzelf. Volgende ronde: ${next.name}.`;
+    if (moved < 0) return `Eerst nog even ${next.name}; daarna weer verder.`;
+    if (next.id !== cur.id) return `${cap(nameOf(cur.id))} gaat al vanzelf. Volgende ronde: ${next.name}.`;
+    if (green(cur.id)) return `${cap(nameOf(cur.id))} gaat vanzelf. Volgende ronde: vasthouden, met nieuwe ${T.noun}.`;
+    if (s_.power) return `${cap(nameOf(cur.id))} lukt bijna altijd meteen. We blijven hier tot het vanzelf gaat.`;
+    return `Volgende ronde: weer ${nameOf(cur.id)}, met nieuwe ${T.noun}${res.steps ? ", en wat een tussenstap nodig had" : ""}.`;
   }
   /* waarnemingen van één ronde, voor de stem (PL.compose) en voor de AI-haak */
   function roundFacts(res, again){
@@ -2887,7 +3055,7 @@ PL.start = async function(T, opts){
     const tooLong = (Date.now() - S.t0) > P.sessionMin * 60000;
     let fact = "";
     if (!factShown && T.aiFact){ factShown = true; fact = `<p class="pl-fact"><b>Weetje over AI.</b> ${esc(T.aiFact)}</p>`; }
-    route("klaar", true); app.classList.remove("pl-inround");
+    route("klaar", true); app.classList.remove("pl-inround", "pl-atstart");
     // v0.11 (Peak-End): een kort feestje. Geen score: wat ze deed, wat erbij groeide, en één volgende stap.
     const V = lastRound.voice || {};   // v0.12: de stem (src/stem.js)
     screen.innerHTML = `
@@ -2897,21 +3065,22 @@ PL.start = async function(T, opts){
         <div class="pl-cheer" id="pl-cheer" aria-live="polite">${esc(lastRound.cheer || lastRound.base)}</div>
         ${res.feelMsg ? `<p class="pl-stemline pl-toets">${esc(res.feelMsg)}</p>` : ""}
         ${V.groei ? `<p class="pl-grow">${esc(V.groei)}</p>` : ""}
-        <div class="pl-tuinwrap pl-tuin-onder" id="pl-endtuin" aria-hidden="true"></div>
-        ${T.endExtra ? T.endExtra(ctx, res) : ""}
+        <div class="pl-tuinwrap pl-tuin-onder pl-tuin-perk" id="pl-endtuin" aria-hidden="true"></div>
         <p class="pl-note pl-nextline"><b>Volgende ronde.</b> ${esc(lastRound.next)}</p>
-        ${V.morgen ? `<p class="pl-note pl-stemline">${esc(V.morgen)}</p>` : ""}
         ${V.lang ? `<p class="pl-note pl-stemline">${esc(V.lang)}</p>` : ""}
-        <div class="pl-feelwrap"><span class="pl-note">Was iets te makkelijk of pittig? Dat mag je zeggen, hoeft niet.</span>${feelHTML("einde")}</div>
+        <div class="pl-feelwrap"><span class="pl-note">Te makkelijk of pittig? Zeg het gerust.</span>${feelHTML("einde")}</div>
+        ${(T.endExtra || V.morgen || fact || (custom && !custom.all)) ? `<details class="pl-details pl-more"><summary>Meer</summary>
+        ${T.endExtra ? T.endExtra(ctx, res) : ""}
+        ${V.morgen ? `<p class="pl-note pl-stemline">${esc(V.morgen)}</p>` : ""}
         ${fact}
-        ${custom && !custom.all ? `<button class="pl-help" id="pl-make3" type="button">Iets anders kiezen</button>` : ""}
+        ${custom && !custom.all ? `<button class="pl-help" id="pl-make3" type="button">Iets anders kiezen</button>` : ""}</details>` : ""}
       </div>
       <div class="pl-actions">
         ${V.tired ? `<button class="pl-btn big pl-full" id="pl-stop" type="button">Klaar voor vandaag</button>
         <button class="pl-btn quiet pl-full" id="pl-again" type="button">Nog een keer</button>` : `<button class="pl-btn big pl-full" id="pl-again" type="button">Nog een keer</button>
         <button class="pl-btn quiet pl-full" id="pl-stop" type="button">Klaar voor vandaag</button>`}
       </div></div>`;
-    allStates().then(st => { const b = $("pl-endtuin"); if (b && PL.tuin) PL.tuin(b, {states: st, strook: true}); });
+    allStates().then(st => { const b = $("pl-endtuin"); if (b && PL.tuin) PL.tuin(b, {states: st, strook: true, focus: T.id}); });
     if (!feelStone) feelStone = res.stoneId;
     wireFeel();
     $("pl-again").addEventListener("click", () => { S.again++; data.forms[form].again++; if (lastRound.ev) lastRound.ev.again = 1; if (T.onAgain) try { T.onAgain(ctx); } catch(e){} save(); playRound(true); });
@@ -2932,7 +3101,7 @@ Antwoord alleen met de zinnen.`).then(t => { if (t && (!lastRound.mustHave || t.
   async function allStates(){ const st = {}; for (const t of trainings) st[t.id] = t.id === T.id ? data : ((await store.load("philearn-" + t.id)) || null); return mergeGroups(st); }
   async function showGarden(back, fromRoute){
     if (!fromRoute) route("tuin");
-    app.classList.remove("pl-inround");
+    app.classList.remove("pl-inround", "pl-atstart");
     const can = T.canDo(ctx);
     gardenBack = back || null;
     // v0.12 (S9, S12, S14, S16): de resultatenkaart van deze training, in zinnen met feiten; daaronder wat ze al kan
@@ -2956,7 +3125,7 @@ Antwoord alleen met de zinnen.`).then(t => { if (t && (!lastRound.mustHave || t.
          Home en de terug-knop gaan meteen; op Home en hier staat daarna "Ga verder". --- */
   function leaveGuard(go){
     if (!inRound) return go();
-    runId++; inRound = false; topBtn(false); app.classList.remove("pl-inround");
+    runId++; inRound = false; topBtn(false); app.classList.remove("pl-inround", "pl-atstart");
     log({leave: 1, st: custom && !custom.all ? custom.stoneId : T.stones[data.stage - 1].id, f: form, open: data.open ? data.open.i : undefined});
     if (data.open && data.open.i === 0 && !(data.open.q || []).some(o => o.rq)) delete data.open;   // nog niets gedaan: dan is er niets om af te maken
     if (T.teardown) T.teardown(ctx);
@@ -2980,7 +3149,7 @@ Antwoord alleen met de zinnen.`).then(t => { if (t && (!lastRound.mustHave || t.
   };
 
   function showBye(){
-    route("", true); app.classList.remove("pl-inround");
+    route("", true); app.classList.remove("pl-inround", "pl-atstart");
     screen.innerHTML = `<div class="pl-intro"><div class="pl-card" style="display:grid;gap:12px"><h2 class="pl-h2">Tot de volgende keer</h2>
       <p class="pl-lead">Je tuin groeit mee met wat je vandaag deed. De volgende keer beginnen we met iets wat vandaag lukte.</p>
       <div class="pl-tuinwrap" id="pl-tuin"></div></div>
@@ -3277,11 +3446,11 @@ const F = {
   "Je trainde hier {dag}. We gaan door met {stap}.",
   "{Dag} werkte je aan {stap}. Daar gaan we verder.",
   "Verder met {stap}, waar je {dag} was.",
-  "{Dag} was je bij {stap}. Vandaag weer een stukje.",
+  "{Dag} was je bij {stap}. Nu weer een stukje.",
   "Het laatst: {stap}, {dag}. Daar pak je het op.",
   "{Stap} ligt klaar; daar was je {dag}.",
   "Je was {dag} bezig met {stap}. Die gaat vandaag door.",
-  "{Dag} {stap}. Vandaag een volgende ronde."]},
+  "{Stap}, {dag}. Nu een volgende ronde."]},
 "home.eerste": {staat: "eerste", toon: "uitnodigend", r: "S2 S12 S18", v: [
   "{Training} begint bij {stap}. Een korte ronde om te kijken?",
   "Eerste keer {training}: we beginnen bij {stap}.",
@@ -3383,7 +3552,7 @@ const F = {
   "{DagT} {v:ligt|liggen} {items} weer klaar.",
   "{Items} {v:komt|komen} {dagT} nog een keer langs.",
   "{DagT}: {items}.",
-  "Even wachten, dan {v:komt|komen} {items} terug: {dagT}.",
+  "ev: Even wachten, dan komt {items} terug: {dagT}.",
   "{Items} {v:rust|rusten} tot {dagT}."]},
 "kaart.rust": {staat: "herhaling", toon: "rustig", r: "S14 S18", v: [
   "{Aantal} laat ik rusten tot {dagT}. Rust helpt bij onthouden.",
@@ -3461,13 +3630,13 @@ const F = {
   "{Items} {v:wacht|wachten} al even. Die eerst."]},
 "intro.vorm": {staat: "autonomie", toon: "licht", r: "S8 S18", v: [
   "{Dag} koos je {vorm}. Die staat klaar; wisselen mag.",
-  "Vorige keer {vorm}, {dag}. Weer zo, of anders?",
+  "{Dag} speelde je {vorm}. Weer zo, of anders?",
   "{Vorm} staat aan, net als {dag}.",
   "Je speelde {dag} {vorm}. Kies gerust iets anders.",
   "{Dag} was het {vorm}. Jij kiest.",
   "{Vorm} weer? Dat koos je {dag}.",
-  "Klaar met {vorm}, zoals {dag}.",
-  "{Dag}: {vorm}. Vandaag mag je kiezen."]},
+  "{Vorm} staat weer klaar, zoals {dag}.",
+  "{Dag}: {vorm}. Kies gerust iets anders."]},
 "intro.uitleg": {staat: "uitleg", toon: "rustig", r: "S12 S6 S18", v: [
   "Bij {stap} probeer ik vandaag {mode} als uitleg.",
   "Vandaag leg ik {stap} uit met {mode}.",
@@ -3760,6 +3929,9 @@ S.say = function(fam, slots, mem){
   // "pl:" = alleen bij meervoud, "ev:" = alleen bij enkelvoud (v0.12.1: geen "de één zin die vanzelf gaan")
   const ok = F.v.map((t, i) => ({t, id: fam + "#" + (i + 1)})).filter(v => slotsOf(v.t).every(k => sl[k] != null && sl[k] !== "") && !(/^pl:/.test(v.t) && !sl.pl) && !(/^ev:/.test(v.t) && sl.pl));
   if (!ok.length) return "";
+  // v0.16 (Tesler): geen tijdwoord dubbel ("Vandaag … vandaag") en geen "Vorige keer … vandaag"
+  const clash = t => { const z = t.toLowerCase(); return (z.match(/\bvandaag\b/g) || []).length > 1 || (z.match(/\bgisteren\b/g) || []).length > 1 || (/vorige keer/.test(z) && /\bvandaag\b/.test(z)); };
+  { const nc = ok.filter(v => !clash(fill(v.t, sl))); if (nc.length) ok.splice(0, ok.length, ...nc); }
   const rec = mem.recent[fam] || [];
   let cand = ok.filter(v => !rec.includes(v.id));
   if (!cand.length){ const age = v => rec.indexOf(v.id); cand = ok.slice().sort((a, b) => age(a) - age(b)).slice(0, 1); }   // alles kort geleden gebruikt: de oudste
@@ -4449,10 +4621,11 @@ PL.tuin = async function(box, opts){
   const strook = !!opts.strook;   // de rustige strook op het startscherm: dezelfde weide, alleen het onderste deel
   const avond = toon === "avond" || toon === "nacht";
   const oud = box.querySelector(".gd-scene"); if (oud && window.TuinBeweging) TuinBeweging.stop(oud);
-  box.innerHTML = `<div class="gd${strook ? " gd-strook" : ""} gd-t${plan.tier} gd-${toon}${toon === "nacht" && !has("weide-nacht") ? " gd-nachtavond" : ""}${opts.focus ? " gd-focus" : ""}" role="img" aria-label="Mijn tuin"${avond ? " data-avond" : ""} style="--nevel:${plan.nevel}">
+  box.innerHTML = `<div class="gd${strook ? " gd-strook" : ""}${opts.vol ? " gd-vol" : ""} gd-t${plan.tier} gd-${toon}${toon === "nacht" && !has("weide-nacht") ? " gd-nachtavond" : ""}${opts.focus ? " gd-focus" : ""}" role="img" aria-label="Mijn tuin"${avond ? " data-avond" : ""} style="--nevel:${plan.nevel}">
     <div class="gd-scene"><img class="bg" src="${src(weide(toon))}" alt="" draggable="false">${NACHT.aan ? sterren() : ""}<div class="gd-nevel"></div><div class="gd-dingen">${els}</div>
     <div class="gras voor">${has("gras-voor") ? Array.from({length: 5}, () => im("gras-voor")).join("") : ""}</div><div class="gd-toon"></div></div></div>`;
   const G_ = box.querySelector(".gd"), scene = box.querySelector(".gd-scene");
+  if (opts.vol) requestAnimationFrame(() => { G_.scrollLeft = (G_.scrollWidth - G_.clientWidth) / 2; });
   if (opts.focus) G_.querySelectorAll(`[data-bed="${opts.focus}"]`).forEach(x => x.classList.add("aan"));
   // pas tonen als de lagen er zijn (geen losse stukken die binnenvallen); dan beweegt hij
   // wat beweegt heeft een bovengrens (vloeiend op een tablet): het dichtstbijzijnde beweegt, de rest staat stil of rust op een bloem
@@ -4684,7 +4857,7 @@ function stoneOf(k){ const it = fromKey(k); if (it.type === "x") return it.a >= 
 /* ---------- generatoren: kiezen bij voorkeur wat nog niet vlot is ---------- */
 function choose(ctx, cands){
   // laagste score eerst: onbekend of met tussenstap vóór bekend; wat aan herhaling toe is, altijd eerst
-  const score = it => { const r = ctx.rec(it.key); return (ctx.due(it.key) ? -20 : 0) + (ctx.known(it.key) ? 10 : 0) + (r.st > 0 && r.last === "step" ? -5 : 0) + Math.random() * 6; };
+  const score = it => { const r = ctx.rec(it.key); return (ctx.due(it.key) ? -20 : 0) + (ctx.known(it.key) ? 10 : 0) + (r.st > 0 && r.last === "step" ? -5 : 0) + (ctx.sessScore ? ctx.sessScore(it.key) : 0) + Math.random() * 6; };
   return cands.map(it => [score(it), it]).sort((a, b) => a[0] - b[0])[0][1];
 }
 const STONES = [
@@ -4925,8 +5098,10 @@ const HOE = {
   v: it => { const [a, b, c] = kies2(it, [3, 4, 2], [5, 2, 3], (x, v) => x.v && x.v[0] === v[0] && x.v[1] === v[1] && x.v[2] === v[2]); return {title: "Bewerkingsvolgorde", lines: [`Je koopt 1 schrift van ${a} euro en ${b} pennen van ${c} euro: ${a} + ${b} × ${c}.`, "Eerst wat tussen haakjes staat.", "Dan keer en gedeeld door.", "Dan plus en min, van links naar rechts.", `${a} + ${b} × ${c} = ${a} + ${b * c} = ${a + b * c}, niet ${(a + b) * c}.`], html: `<div class="rk-vb-volgorde"><span>${a} + <u>${b} × ${c}</u></span><span>${a} + ${b * c}</span><span><b>${a + b * c}</b></span></div>`}; }
 };
 const T = {
-  id: "rekenmuur", title: "De rekenmuur", version: "v0.6", noun: "sommen", subject: "Rekenen", glyph: "10", tint: "#F4DDE3",
-  practices: "rekenen uit je hoofd, van splitsen tot 10 tot procenten en breuken",
+  id: "rekenmuur", title: "De rekenmuur", version: "v0.6.1",
+  noun: "sommen", subject: "Rekenen", glyph: "10", tint: "#F4DDE3",
+  okQuiet: true, okPause: 450,   // v0.6.1: geen strook "Gelukt" en geen Verder; het antwoord kleurt groen en de volgende som komt
+  practices: "rekenen uit je hoofd: eerst splitsen tot 10, later procenten en breuken",
   helps: "rekenen met geld, tijd en grote getallen, en verhoudingen",
   stones: STONES, stoneOf, fromKey: k => fromKey(k),
   rules: it => { const f = HOE[it.type]; if (!f) return null; ALT = false; let R = f(it); const af = it.eq.replace("?", kc(it.ans)); if (R.lines.join(" ").includes(af)){ ALT = true; R = f(it); ALT = false; } return {title: R.title, lines: R.lines, html: `<div class="rk-vb">${R.html}</div>`}; },
@@ -4987,6 +5162,7 @@ const T = {
       trail([it.label, "en nu in één keer"]);
       while (norm(await read(it.eq)) !== norm(it.ans)) ctx.fb.step(`Je kwam net uit op ${it.ans}. Typ dat maar.`);
     }
+    { const s = document.getElementById("rk-slot"); if (s) s.classList.add("rk-goed"); }   // v0.6.1: het antwoord kleurt groen; dat is het "goed"
     ctx.fb.ok(fact(it)); trail([]); hideModel();
     return {first, step: !first, typingMs, support: sup + (T._asked ? "+knop" : "")};
   }
@@ -5016,7 +5192,7 @@ const fromKey = k => { const [, t, n] = k.split(":"); return mk(+t, +n); };
 const fact = it => `${it.t} × ${it.n} = ${it.ans}`;
 const stoneOf = k => "T" + k.split(":")[1];
 function choose(ctx, cands){
-  const score = it => { const r = ctx.rec(it.key); return (ctx.due(it.key) ? -20 : 0) + (ctx.known(it.key) ? 10 : 0) + (r.st > 0 && r.last === "step" ? -5 : 0) + Math.random() * 6; };
+  const score = it => { const r = ctx.rec(it.key); return (ctx.due(it.key) ? -20 : 0) + (ctx.known(it.key) ? 10 : 0) + (r.st > 0 && r.last === "step" ? -5 : 0) + (ctx.sessScore ? ctx.sessScore(it.key) : 0) + Math.random() * 6; };
   return cands.map(it => [score(it), it]).sort((a, b) => a[0] - b[0])[0][1];
 }
 const range = (a, b) => Array.from({length: Math.max(0, b - a + 1)}, (_, i) => a + i);
@@ -5282,7 +5458,7 @@ async function strategie(ctx, it){
 }
 
 const T = {
-  id: "tafels", title: "Tafelreis", version: "v0.7", noun: "sommen", subject: "Rekenen · tafels", glyph: "×", tint: "#F4DDE3",
+  id: "tafels", title: "Tafelreis", version: "v0.7.1", noun: "sommen", subject: "Rekenen · tafels", glyph: "×", tint: "#F4DDE3",
   practices: "de tafels van 2 tot en met 10 uit je hoofd",
   helps: "delen, breuken, procenten, verhoudingen en rekenen met grote getallen",
   stones: STONES, stoneOf, fromKey,
@@ -5315,7 +5491,8 @@ const T = {
   keyLabel: k => fact(fromKey(k)),
   canDo(ctx){ return Object.keys(ctx.data.items).filter(k => ctx.known(k)).map(k => fact(fromKey(k))).slice(0, 60); },
 
-  pause: 650,     // kortere adempauze na feedback dan de kern (900 ms): het spel blijft in beweging
+  pause: 650,
+  okQuiet: true, okPause: 250,   // v0.13.1: geen strook "Gelukt" en geen Verder; de kaart draait en de figuur springt, dan meteen de volgende som     // kortere adempauze na feedback dan de kern (900 ms): het spel blijft in beweging
   setup(ctx){
     T._knownAtStart = new Set(Object.keys(ctx.data.items).filter(k => ctx.known(k)));
     travel = 0;
@@ -5466,7 +5643,7 @@ function checkPack(obj){ const bad = []; let ok = 0; for (const it of obj.items)
 const byKind = k => Object.values(BANK).filter(w => k === "mix" ? (w.k === "lang" || w.k === "kort" || w.k === "vast") : k === "uitz" ? (w.k === "uitz" || w.k === "sz" || w.k === "s") : w.k === k);
 
 function choose(ctx, cands){
-  const score = w => { const r = ctx.rec("w:" + w.ev); return (ctx.due("w:" + w.ev) ? -20 : 0) + (ctx.known("w:" + w.ev) ? 10 : 0) + (r.st > 0 && r.last === "step" ? -5 : 0) + (r.n === 0 ? -2 : 0) + Math.random() * 6; };
+  const score = w => { const r = ctx.rec("w:" + w.ev); return (ctx.due("w:" + w.ev) ? -20 : 0) + (ctx.known("w:" + w.ev) ? 10 : 0) + (r.st > 0 && r.last === "step" ? -5 : 0) + (r.n === 0 ? -2 : 0) + (ctx.sessScore ? ctx.sessScore("w:" + w.ev) : 0) + Math.random() * 6; };
   const w = cands.map(w => [score(w), w]).sort((a, b) => a[0] - b[0])[0][1];
   return {key: "w:" + w.ev, w, label: w.mv};
 }
@@ -5511,7 +5688,7 @@ async function tussenstap(ctx, w){
     ctx.fb.step(`"${w.ev}" is een rare: in het meervoud wordt de klank lang. Lang aan het eind van een stukje: één letter. Schrijf het nu zelf.`); return;
   }
   // lang of kort: luisteren, dan de regel
-  if (ctx.canSay) ctx.say(w.ev);
+  if (ctx.canSay) ctx.say(w.ev, "woord-" + PL.slug(w.ev));
   await deelvraag(ctx, box, `Luister naar "${w.ev}". Hoor je een lange of een korte ${w.l}?`, [["lang", "Lang"], ["kort", "Kort"]], w.k, `Luister nog eens naar "${w.ev}". Tik op Lees voor als je het wilt horen.`);
   ctx.fb.step(w.k === "lang" ? `Een lange ${w.l}. In het meervoud eindigt het eerste stukje op de ${w.l}; dan blijft hij lang met één ${w.l}. Schrijf het nu zelf.` : `Een korte ${w.l}. Om hem kort te houden schrijf je de medeklinker erna twee keer. Schrijf het nu zelf.`);
 }
@@ -5537,7 +5714,7 @@ function waarom(w){
   return `${een} Een rare: in het meervoud wordt de klank lang.`;
 }
 const T = {
-  id: "spelling-een-of-twee", title: "Eén of twee", version: "v0.6", noun: "woorden", subject: "Spelling", glyph: "aa", tint: "#FBF1DC",
+  id: "spelling-een-of-twee", title: "Eén of twee", version: "v0.7", noun: "woorden", subject: "Spelling", glyph: "aa", tint: "#FBF1DC",
   practices: "het meervoud: één of twee letters (bomen, ballen)",
   rules: it => REGELS[it.stone] || REGELS.S3,
   _test: {waarom, REGELS},
@@ -5552,7 +5729,7 @@ const T = {
   voiceLabel: k => `"${(BANK[k.slice(2)] || {ev: k.slice(2)}).ev}"`,   // v0.12: de stem noemt het woord in het enkelvoud; het meervoud is het antwoord
   canDo(ctx){ return Object.keys(ctx.data.items).filter(k => ctx.known(k) && BANK[k.slice(2)]).map(k => BANK[k.slice(2)].mv).sort((a, b) => a.localeCompare(b, "nl")).slice(0, 60); },
 
-  setup(ctx){ ctx.work.innerHTML = `<div class="pl-card sp-board"><div class="sp-head"><p class="sp-frame" id="sp-frame"></p>${ctx.canSay ? `<button type="button" class="pl-help" id="sp-say">Lees voor</button>` : ""}</div><div class="pl-row" id="sp-answer"></div><div class="sp-step" id="sp-step"></div></div>`; },
+  setup(ctx){ ctx.work.innerHTML = `<div class="pl-card sp-board"><div class="sp-head"><p class="sp-frame" id="sp-frame"></p>${ctx.canSay ? `<button type="button" class="pl-btn quiet sp-saybtn" id="sp-say">Lees voor</button>` : ""}</div><div class="pl-row" id="sp-answer"></div><div class="sp-step" id="sp-step"></div></div>`; },
 
   async ask(item, ctx){
     const w = item.w, box = document.getElementById("sp-answer");
@@ -5561,7 +5738,7 @@ const T = {
     ctx.setAsk("Hoe schrijf je het?", "");
     let step = false, typingMs = 0;
     const sup = ctx.support(item.stone);
-    const sayB = document.getElementById("sp-say"); if (sayB) sayB.onclick = () => ctx.say(`één ${w.ev}, twee ${w.mv}`);
+    const sayB = document.getElementById("sp-say"); if (sayB) sayB.onclick = () => ctx.say(`één ${w.ev}, twee ${w.mv}`, "zin-" + PL.slug(w.ev));
     let revealed = false;
     if (ctx.form === "B"){
       box.innerHTML = `<label class="pl-note" for="sp-in">Typ het meervoud</label><input id="sp-in" class="sp-in" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="done"><button type="button" class="pl-btn" id="sp-ok">Klaar</button>`;
@@ -5577,7 +5754,7 @@ const T = {
     } else {
       const opts = ctx.shuffle([w.mv, fout(w)]);
       box.innerHTML = opts.map(o => `<button type="button" class="pl-btn quiet sp-choice" data-v="${ctx.esc(o)}">${ctx.esc(o)}</button>`).join("");
-      if (sup === "vol" && ctx.canSay) ctx.say(`één ${w.ev}, twee ${w.mv}`);
+      if (sup === "vol" && ctx.canSay) ctx.say(`één ${w.ev}, twee ${w.mv}`, "zin-" + PL.slug(w.ev));
       const choose2 = () => new Promise(res => box.querySelectorAll(".sp-choice:not([disabled])").forEach(b => { b.onclick = () => res(b.dataset.v); }));
       let v = await choose2();
       // na de tussenstap staan beide keuzes er weer: de tweede poging is een echte keuze. Gaat die ook mis, dan blijft er één over (= getoond).
@@ -5791,7 +5968,7 @@ const T = {
         await kies(ctx, `${grp === "1" ? "Ik" : grp === "p" ? "Meer dan één" : "Eén persoon of ding"}. Welke vorm past daarbij?`, [["st", "Alleen de stam"], ["stt", "Stam + t"], ["inf", "Het hele werkwoord"]], want,
           `Bij ik: alleen de stam. Bij één ander (jij, hij, de juf): stam + t. Bij meer dan één: het hele werkwoord.`);
         if (want !== "inf") await stapStam(ctx, it.v, R);
-        ctx.fb.step(want === "st" ? "Nu het woord: alleen de stam." : want === "stt" ? "Nu het woord: de stam, en dan een t erachter (staat er al een t, dan blijft het één)." : "Nu het woord: het hele werkwoord.");
+        ctx.fb.step(want === "st" ? "Nu het woord: alleen de stam." : want === "stt" ? "Nu het woord: de stam, en dan een t erachter (eindigt de stam al op een t, dan geen tweede t)." : "Nu het woord: het hele werkwoord.");
       }
       else if (it.v.meng && it.kind === "vd"){
         await kies(ctx, `${cap(it.v.inf)}: in de verleden tijd is het ${it.v.vt1}. Hoe eindigt het voltooid deelwoord?`, [["en", "Op -en"], ["td", "Op -t of -d"]], "en", `${cap(it.v.inf)} is gemengd: de verleden tijd gaat gewoon, het voltooid deelwoord eindigt op -en.`);
@@ -6512,7 +6689,7 @@ function makeRegion(RG){
   }
 
   function choose(ctx, ids){
-    const score = id => { const r = ctx.rec("c:" + id); return (ctx.due("c:" + id) ? -20 : 0) + (ctx.known("c:" + id) ? 10 : 0) + (r.st > 0 && r.last === "step" ? -5 : 0) + (r.n === 0 ? -2 : 0) + Math.random() * 6; };
+    const score = id => { const r = ctx.rec("c:" + id); return (ctx.due("c:" + id) ? -20 : 0) + (ctx.known("c:" + id) ? 10 : 0) + (r.st > 0 && r.last === "step" ? -5 : 0) + (r.n === 0 ? -2 : 0) + (ctx.sessScore ? ctx.sessScore("c:" + id) : 0) + Math.random() * 6; };
     const id = ids.map(id => [score(id), id]).sort((a, b) => a[0] - b[0])[0][1];
     return {key: "c:" + id, id, label: nl(id)};
   }
@@ -6528,7 +6705,8 @@ function makeRegion(RG){
 
   const titleNl = RG.id === "wereld" ? "Landen van de wereld" : `Landen van ${R.nl}`;
   const T = {
-    id: RG.id, title: titleNl, version: "v0.6.2", noun: "landen", subject: "Topografie", glyph: RG.glyph, tint: RG.tint,
+    id: RG.id, title: titleNl, version: "v0.6.3", noun: "landen", okPause: 1000,   // v0.17: de hoofdstad staat even op de kaart, dan de volgende vraag
+    subject: "Topografie", glyph: RG.glyph, tint: RG.tint,
     group: "topo", groupTitle: "Landen van de wereld", groupName: R.nl, groupCount: ASK.length, wide: true,
     stones: STONE_LIST, stoneOf, fromKey: k => C[k.slice(2)] ? {key: k, id: k.slice(2), label: nl(k.slice(2))} : null,
     practices: `alle ${ASK.length} landen van ${RG.id === "wereld" ? "de wereld" : R.nl} vinden op de kaart en benoemen`,
