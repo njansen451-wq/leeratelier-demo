@@ -1,4 +1,4 @@
-# Leeratelier · presentatie (v0.27.0)
+# Leeratelier · presentatie (v0.28.0)
 
 Deze map is gebouwd uit de bronrepo `natalia-learning-lab` met `node src/build.js --space presentatie dist/leeratelier-demo`. Niet met de hand wijzigen: pas de bron aan en bouw opnieuw.
 
